@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <h1>Available Surveys</h1>
+    
+    {% if surveys %}
+        <div class="survey-list">
+            {% for survey in surveys %}
+                <div class="survey-item mb-3">
+                    <a href="{% url 'show-survey' id=survey.id %}" class="text-decoration-none">
+                        <h3>{{ survey.title }}</h3>
+                    </a>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p>No surveys available at the moment.</p>
+    {% endif %}
+</div>
+
+<style>
+    .survey-list {
+        margin: 20px 0;
+    }
+
+    .survey-item {
+        padding: 15px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        transition: background-color 0.2s;
+    }
+
+    .survey-item:hover {
+        background-color: #f8f9fa;
+    }
+
+    .survey-item h3 {
+        margin: 0;
+        color: #007bff;
+    }
+    
+</style>
+{% endblock %}
