@@ -1,0 +1,64 @@
+{% include 'admin_dashboard_base.html' %} {% load static %}
+
+{% block body %}
+
+
+
+<script>
+    (function () {
+        window.onpageshow = function (event) {
+            if (event.persisted) {
+                window.location.reload();
+            }
+        };
+    })();
+</script>
+<div class="page-wrapper">
+    <div class="content">
+    <div class="page-header">
+        <div class="row">
+            <div class="col-sm-12">
+                <h3 class="page-title">Dashboard</h3>
+                <ul class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="">Admin Dashboard</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+       <div id="notification-container" class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
+        <div id="notification-toast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast-header bg-info text-white">
+                <strong class="me-auto">Notification</strong>
+                <!--<small>Just now</small>-->
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+            <div class="toast-body">
+                <p id="notification-message"></p>
+                <div class="mt-2 pt-2 border-top">
+                    <button type="button" class="btn btn-primary btn-sm" id="view-button">View</button>
+                    <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="toast" id="dismiss-button">Dismiss</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+        <div class="row">
+            <div class="col-lg-3 col-sm-6 col-12 d-flex">
+                <div class="dash-count">
+                    <div class="dash-counts">
+                        <a href="{% url 'admin_dashboard-dashboard' %}" style="text-decoration: none;color: white;">
+                            <h4>{{ total_providers }}</h4>
+                            <h5>XXXXXXX XXXXXXXXX</h5>
+                        </a>
+                    </div>
+                    <div class="dash-imgs">
+                        <i class="fas fa-hospital"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% endblock body %}

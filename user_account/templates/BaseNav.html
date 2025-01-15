@@ -1,0 +1,50 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+    <style>
+        .logo {
+            font-family: 'Arial', sans-serif;
+            font-size: 24px;
+            font-weight: bold;
+            color: #007bff;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+    </style>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+
+    <title>{% block title %}Survey{% endblock %}</title>
+
+    <link rel="stylesheet" type="text/css" href="{% static 'style.css' %}">
+</head>
+
+<body>
+    <header>
+        <div class="container">
+            <div class="d-flex">
+                <span class="logo">Survey India</span>
+                <!-- <img class="logo" src="{% static 'labs-logo-h-t.png' %}" alt="LaLoka Labs"> -->
+                <!-- <h2>{% block header_title %}2025-16{% endblock %}</h2> -->
+                 <br><br>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            {% block content %}
+            <!-- Content goes here -->
+            {% endblock %}
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            {% block footer %}Footer{% endblock %}
+        </div>
+    </footer>
+</body>
+</html>

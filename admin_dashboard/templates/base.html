@@ -1,6 +1,19 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    
+    <title>{% block title %}Survey{% endblock %}</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" type="text/css" href="{% static 'style.css' %}">
+    
     <style>
         .logo {
             font-family: 'Arial', sans-serif;
@@ -9,26 +22,76 @@
             color: #007bff;
             text-transform: uppercase;
             letter-spacing: 2px;
+            text-decoration: none;
+        }
+        
+        header {
+            padding: 1rem 0;
+            border-bottom: 1px solid #e9ecef;
+            margin-bottom: 2rem;
+        }
+        
+        footer {
+            margin-top: 3rem;
+            padding: 1.5rem 0;
+            background-color: #f8f9fa;
+            border-top: 1px solid #e9ecef;
+        }
+        
+        .messages {
+            list-style: none;
+            padding: 0;
+            margin-bottom: 1.5rem;
+        }
+        
+        .messages li {
+            padding: 1rem;
+            margin-bottom: 0.5rem;
+            border-radius: 4px;
+        }
+        
+        .messages .success {
+            background-color: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+        }
+        
+        .messages .error {
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+        }
+        
+        .messages .warning {
+            background-color: #fff3cd;
+            border: 1px solid #ffeeba;
+            color: #856404;
+        }
+        
+        .messages .info {
+            background-color: #d1ecf1;
+            border: 1px solid #bee5eb;
+            color: #0c5460;
+        }
+        
+        main {
+            min-height: calc(100vh - 200px);
         }
     </style>
-<head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1">
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
-
-    <title>{% block title %}Survey{% endblock %}</title>
-
-    <link rel="stylesheet" type="text/css" href="{% static 'style.css' %}">
+    
+    {% block extra_css %}{% endblock %}
 </head>
 
 <body>
     <header>
         <div class="container">
-            <div class="d-flex">
-                <span class="logo">Survey India</span>
-                <!-- <img class="logo" src="{% static 'labs-logo-h-t.png' %}" alt="LaLoka Labs"> -->
-                <!-- <h2>{% block header_title %}2025-16{% endblock %}</h2> -->
-                 <br><br>
+            <div class="d-flex justify-content-between align-items-center">
+                <a href="/" class="logo text-decoration-none">Survey India</a>
+                <nav>
+                    {% block navigation %}
+                    <!-- Add navigation items here if needed -->
+                    {% endblock %}
+                </nav>
             </div>
         </div>
     </header>
@@ -36,13 +99,15 @@
     <main>
         <div class="container">
             {% block messages %}
-            {% if messages %}
-            <ul class="messages {% if message.tags %}{{ message.tags }}{% endif %}">
-                {% for message in messages %}
-                <li>{{ message }}</li>
-                {% endfor %}
-            </ul>
-            {% endif %}
+                {% if messages %}
+                <ul class="messages">
+                    {% for message in messages %}
+                    <li class="{% if message.tags %}{{ message.tags }}{% endif %}">
+                        {{ message }}
+                    </li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
             {% endblock %}
 
             {% block content %}
@@ -51,10 +116,21 @@
         </div>
     </main>
 
-    <footer>
+    <footer class="bg-light">
         <div class="container">
-            {% block footer %}Footer{% endblock %}
+            <div class="row">
+                <div class="col text-center">
+                    {% block footer %}
+                    <p class="mb-0">&copy; {% now "Y" %} Survey India. All rights reserved.</p>
+                    {% endblock %}
+                </div>
+            </div>
         </div>
     </footer>
+
+    <!-- Bootstrap Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+    {% block extra_js %}{% endblock %}
 </body>
 </html>
