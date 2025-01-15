@@ -3,10 +3,22 @@ from .models import Survey, Submission
 from .forms import SurveyForm
 
 
+# def index(request):
+#     surveys = Survey.objects.all()
+#     print(surveys)
+#     return render(request, "index.html", {"surveys": surveys})
+
+
+# views.py
 def index(request):
+    video_id = "GKAgpuJkBdk"  # Make sure this is being passed correctly
     surveys = Survey.objects.all()
-    print(surveys)
-    return render(request, "index.html", {"surveys": surveys})
+    context = {
+        "surveys": surveys,
+        "video_id": video_id,
+    }
+    print("Video ID:", video_id)  # Add this debug line
+    return render(request, "index.html", context)
 
 def thank_you(request):
     return render(request, 'thank_you.html')
