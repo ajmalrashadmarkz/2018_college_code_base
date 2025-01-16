@@ -11,10 +11,10 @@
       <meta name="author" content="Dreamguys - Bootstrap Admin Template">
       <meta name="robots" content="noindex, nofollow">
 
-      <link rel="apple-touch-icon" sizes="180x180" href="{% static 'assets/img/zcare_logo.png' %}">
-      <link rel="icon" type="image/png" sizes="32x32" href="{% static 'assets/img/zcare_logo.png' %}">
-      <link rel="icon" type="image/png" sizes="16x16" href="{% static 'assets/img/zcare_logo.png' %}">
-      <link rel="shortcut icon" type="image/x-icon" href="{% static 'assets/img/zcare_logo.png' %}">
+      <link rel="apple-touch-icon" sizes="180x180" href="{% static 'home_assets/media/logo.svg' %}">
+      <link rel="icon" type="image/png" sizes="32x32" href="{% static 'home_assets/media/logo.svg' %}">
+      <link rel="icon" type="image/png" sizes="16x16" href="{% static 'home_assets/media/logo.svg' %}">
+      <link rel="shortcut icon" type="image/x-icon" href="{% static 'home_assets/media/logo.svg' %}">
 
       <title>Admin</title>
 
@@ -128,13 +128,13 @@
 
           <div class="header-left active">
             <a href="" class="logo mx-5 logo-normal">
-              <img src="{% static 'assets/img/zcare_logo.png' %}" alt>
+              <img src="{% static 'home_assets/media/logo-red.svg' %}" alt>
             </a>
             <a href="" class="logo mx-5 logo-white">
-              <img src="{% static 'assets/img/zcare_logo.png' %}" alt>
+              <img src="{% static 'home_assets/media/logo-red.svg' %}" alt>
             </a>
             <a href="" class="logo-small mx-5">
-              <img src="{% static 'assets/img/zcare_logo.png' %}" alt>
+              <img src="{% static 'home_assets/media/logo-red.svg' %}" alt>
             </a>
             <a id="toggle_btn" href="javascript:void(0);">
               <i data-feather="chevrons-left" class="feather-16"></i>
@@ -248,30 +248,57 @@
                 </li>
 
                 <li class="submenu-open">
-                  <h6 class="submenu-hdr">Catelog</h6>
+                  <h6 class="submenu-hdr">Catalog</h6>
                   <ul>
                     <li>
-                      <a href="{% url 'admin_dashboard-logout' %}" id="dashboard-link">
-                        <i data-feather="grid"></i>
+                      <a href="{% url 'admin_dashboard-category_list' %}" id="dashboard-link">
+                        <i data-feather="folder"></i>
                         <span>Category</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="{% url 'admin_dashboard-products_list' %}" id="dashboard-link">
+                        <i data-feather="box"></i>
+                        <span>Product</span>
                       </a>
                     </li>
                   </ul>
                 </li>
-                    
-                    
-
-                    
+                
+                
                 <li class="submenu-open">
-                  <h7 class="submenu-hdr">Xxxxxxxxx</h7>
+                  <h7 class="submenu-hdr">News</h7>
                   <ul>
-
+                    <li>
+                      <a href="{% url 'admin_dashboard-news_article_list' %}" id="dashboard-link">
+                        <i data-feather="file-text"></i>
+                        <span>News</span>
+                      </a>
+                    </li>
                   </ul>
                 </li>
                 
                 <li class="submenu-open">
-                  <h6 class="submenu-hdr">Other</h6>
+                  <h7 class="submenu-hdr">Blog</h7>
                   <ul>
+                    <li>
+                      <a href="{% url 'admin_dashboard-blog_post_list' %}" id="dashboard-link">
+                        <i data-feather="edit"></i>
+                        <span>Blog</span>
+                      </a>
+                    </li>
+                  </ul>
+                </li>
+                
+                <li class="submenu-open">
+                  <h7 class="submenu-hdr">Jobs</h7>
+                  <ul>
+                    <li>
+                      <a href="{% url 'admin_dashboard-job_listing_list' %}" id="dashboard-link">
+                        <i data-feather="briefcase"></i>
+                        <span>Jobs</span>
+                      </a>
+                    </li>
                   </ul>
                 </li>
                 
