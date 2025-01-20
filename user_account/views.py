@@ -113,168 +113,63 @@ def account_login(request):
     return render(request, 'login.html')
 
 
+from django.shortcuts import get_object_or_404, render, redirect
+from admin_dashboard.models import Survey, Submission
+from admin_dashboard.forms import SurveyForm
+from django.contrib.auth import logout
 
-from django.shortcuts import render, get_object_or_404
-from catalog.models import Category, Product
-from django.http import HttpResponseRedirect
-
-# def category_view(request, category_id):
-#     category = get_object_or_404(Category, id=category_id)
-    
-#     # Fetch subcategories where the parent is the current category
-#     subcategories = Category.objects.filter(parent=category, deleted_at__isnull=True)
-#     parent_category = category.parent if category.parent else None
-    
-
-#     context = {
-#         'category': category,
-#         'subcategories': subcategories,  
-#         'parent_category': parent_category
-#     }
-#     print(context)
-#     return render(request, 'category_home_list.html', context)
-
-
-def get_banner(category):
-    while category:
-        if category.banner:
-            return category.banner.url
-        category = category.parent
-    return None
-
-
-def category_view(request, category_id):
-    print("###############################--category_view--####################")
-    category = get_object_or_404(Category, id=category_id)
-    
-    subcategories = Category.objects.filter(parent=category, deleted_at__isnull=True)
-    banner_url = get_banner(category)
-    
-    subcategory_count = subcategories.count()
-
-    if subcategory_count == 0 and category_id > 5:
-        products = Product.objects.filter(categories=category, deleted_at__isnull=True)
-        
-        context = {
-            'category': category,
-            'subcategories': subcategories,
-            'subcategory_count': subcategory_count,
-            'products': products,
-            'banner_url': banner_url,
-        }
-        return redirect('user_account-product_list_view', category_id=category.id)
-
+# views.py
+def index(request):
+    video_id = "GKAgpuJkBdk"  # Make sure this is being passed correctly
+    surveys = Survey.objects.all()
     context = {
-        'category': category,
-        'subcategories': subcategories,
-        'banner_url': banner_url,
+        "surveys": surveys,
+        "video_id": video_id,
     }
-    print(context)
-    return render(request, 'category_home_list.html', context)
+    print("Video ID:", video_id)  # Add this debug line
+    return render(request, "index.html", context)
+
+def thank_you(request):
+    return render(request, 'thank_you.html')
 
 
-
-#####################################################################################
-
-
-
-def product_list_view(request, category_id):
-    print("###############################--product_list_view_--####################")
-    category = get_object_or_404(Category, id=category_id)
+def show_survey(request, id=None):
+    print("#############show_survey########################")
+    survey = get_object_or_404(Survey, pk=id)
     
-    subcategories = Category.objects.filter(parent=category, deleted_at__isnull=True)
-    banner_url = get_banner(category)
-    subcategory_count = subcategories.count()
-    
-    
-    products = None
-    
-    
-    if subcategory_count == 0:
-        products = Product.objects.filter(categories=category, deleted_at__isnull=True)
-        products_count = products.count()
-        
-        context = {
-            'category': category,
-            'subcategories': subcategories,
-            'subcategory_count': subcategory_count,
-            'products': products,  
-            'products_count':products_count,
-            'banner_url': banner_url,
-        }
-        return render(request, 'product_home_list.html', context)
-        
+    if request.method == 'POST':
+        form = SurveyForm(survey, request.POST)
+        if form.is_valid():
+            submission = Submission.objects.create(
+                survey=survey,
+                participant_email=form.cleaned_data['email'],
+                participant_name=form.cleaned_data['name'],
+                participant_phone=form.cleaned_data['phone'],
+                participant_age=form.cleaned_data['age'],
+                participant_place=form.cleaned_data['place']
+            )
+            
+            for field_name, choice_id in form.cleaned_data.items():
+                if field_name.startswith('question_'):
+                    submission.answer.add(choice_id)
+            
+            return redirect('thank_you')
+    else:
+        form = SurveyForm(survey)
     
     context = {
-        'category': category,
-        'subcategories': subcategories,
-        'subcategory_count': subcategory_count,
-        'products': products,  
+        "survey": survey,
+        "form": form,
     }
-    print(context)
-    return render(request, 'category_home_list.html', context)
-
-
-#####################################################################################
-
-# def product_detail_view(request, product_id):
-#     print("###############################--product_detail_view--####################")
-#     print(product_id)
-#     product = get_object_or_404(Product.objects.select_related(
-#         ).prefetch_related(
-#             'categories',
-#             'images',
-#             'specifications',
-#             'documents'
-#         ), pk=product_id)
-
-#     documents_by_type = {}
-#     for doc in product.documents.all():
-#         if doc.document_type not in documents_by_type:
-#             documents_by_type[doc.document_type] = []
-#         documents_by_type[doc.document_type].append(doc)
-
-#     banner_url = "/media/banner_default_image/Hubnetix_default_Banner.JPG"
-    
-#     context = {
-#         'product': product,
-#         'documents_by_type': documents_by_type,
-#         'banner_url': banner_url,
-#     }
-
-#     return render(request, 'product_home_detail.html', context)
-    # return render(request, 'product_details.html', context)
+    return render(request, "survey.html", context)
 
 
 
-def product_detail_view(request, product_id):
-    print("###############################--product_detail_view--####################")
-    print(product_id)
-    product = get_object_or_404(Product.objects.select_related().prefetch_related(
-        'categories',
-        'images',
-        'specifications',
-        'documents'
-    ), pk=product_id)
 
-    documents_by_type = {}
-    for doc in product.documents.all():
-        if doc.document_type not in documents_by_type:
-            documents_by_type[doc.document_type] = []
-        documents_by_type[doc.document_type].append(doc)
+#################################################################################
 
-    banner_url = "/media/banner_default_image/Hubnetix_default_Banner.JPG"
 
-    context = {
-        'product': product,
-        'documents_by_type': documents_by_type,
-        'banner_url': banner_url,
-        'images': product.images.all(),  
-    }
 
-    print(context)
-
-    return render(request, 'product_home_detail.html', context)
 
 
 
