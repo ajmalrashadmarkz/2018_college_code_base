@@ -149,7 +149,7 @@
                             </li>
                             <li>
                                 <h4>Detailed Description</h4>
-                                <h6>{{ product.detailed_description|default:"Not provided" }}</h6>
+                                <h6>{{ product.detailed_description | safe | default:"Not provided" }}</h6>
                             </li>
                             <li>
                                 <h4>Quantity in Stock</h4>
@@ -171,7 +171,7 @@
                                     {% for specification in product.specifications.all %}
                                     <tr>
                                         <td class="specification-highlight">{{ specification.specification_title }}</td>
-                                        <td>{{ specification.specification }}</td>
+                                        <td>{{ specification.specification | safe }}</td>
                                     </tr>
                                     {% endfor %}
                                 </tbody>

@@ -11,6 +11,7 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 
 
+
 class Category(models.Model):
     STYLE_CHOICES = [('grid', _('Grid')), ('list', _('List')), ('custom', _('Custom Design'))]
     
@@ -144,6 +145,7 @@ class ProductSpecification(models.Model):
     product = models.ForeignKey(Product, related_name='specifications', on_delete=models.CASCADE)
     specification_title = models.CharField(max_length=255, help_text=_("Specification heading"))
     specification = models.TextField(help_text=_("Specification value"))
+    
     #created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='created_specifications')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

@@ -2,6 +2,7 @@
 {% load static %}
 
 {% block extra_css %}
+<!-- Base Styles -->
 <style>
     .messages-container {
         margin-bottom: 20px;
@@ -32,8 +33,18 @@
         margin-bottom: 8px;
         border-radius: 4px;
     }
+    /* Summernote customizations */
+    .note-editor {
+        margin-bottom: 10px;
+    }
+    .note-editing-area {
+        background-color: white;
+    }
 </style>
+<!-- Summernote CSS -->
+<link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.css" rel="stylesheet">
 {% endblock %}
+
 
 {% block content %}
 <div class="page-wrapper">
@@ -90,7 +101,7 @@
                                 </div>
                                 <div class="card-body">
                                     {% for field in form %}
-                                        {% if field.name not in 'specifications' %}
+                                        {% if field.name not in 'specifications' and field.name != 'main_image' %}
                                         <div class="mb-4">
                                             {{ field.label_tag }}
                                             {{ field }}
@@ -108,6 +119,10 @@
                                         {% endif %}
                                     {% endfor %}
 
+
+                                    <!-- Hidden Specifications Input -->
+                                    <input type="hidden" id="id_specifications" name="specifications" value="{{ specifications_json }}">
+
                                     <!-- Specifications Section -->
                                     <div class="mb-4">
                                         <label class="form-label fw-bold">Product Specifications</label>
@@ -124,6 +139,7 @@
 
                         <!-- Right Column - Media & Additional Info -->
                         <div class="col-lg-6">
+                            <!-- Your existing right column content -->
                             <div class="card h-100">
                                 <div class="card-header bg-light">
                                     <h5 class="card-title mb-0">Media & Additional Information</h5>
@@ -261,8 +277,10 @@
 {% endblock %}
 
 
-
 {% block extra_js %}
+<!-- Required JS libraries -->
+<script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.js"></script>
+
 <script>
     $(document).ready(function() {
         // Initialize Select2
@@ -280,6 +298,111 @@
     // Debug logging function
     function debug(message, data) {
         console.log(`[Debug] ${message}:`, data);
+    }
+
+    // Initialize Summernote editor
+    function initializeSummernote(element) {
+        $(element).summernote({
+            height: 150,
+            toolbar: [
+                ['style', ['bold', 'italic', 'underline', 'clear']],
+                ['font', ['strikethrough']],
+                ['para', ['ul', 'ol']],
+                ['insert', ['link']],
+                ['view', ['fullscreen', 'codeview']]
+            ],
+            callbacks: {
+                onChange: function() {
+                    updateHiddenInput();
+                }
+            }
+        });
+    }
+
+    // Add a new specification row
+    function addSpecification(title = '', value = '') {
+        debug('Adding specification', { title, value });
+        
+        const container = document.getElementById('specificationsContainer');
+        if (!container) {
+            console.error('Specifications container not found!');
+            return;
+        }
+        
+        const specIndex = container.children.length;
+        
+        const specDiv = document.createElement('div');
+        specDiv.className = 'row specification-row mb-2 align-items-start';
+        specDiv.innerHTML = `
+            <div class="col-5">
+                <input type="text" 
+                       name="specification_title_${specIndex}" 
+                       class="form-control" 
+                       placeholder="Specification Title"
+                       value="${escapeHtml(title)}" 
+                       required>
+            </div>
+            <div class="col-6">
+                <textarea name="specification_${specIndex}" 
+                          class="form-control specification-value" 
+                          placeholder="Specification Value"
+                          required>${escapeHtml(value)}</textarea>
+            </div>
+            <div class="col-1">
+                <button type="button" 
+                        class="btn btn-danger btn-sm" 
+                        onclick="removeSpecification(this)"
+                        title="Remove Specification">
+                    ×
+                </button>
+            </div>
+        `;
+        
+        container.appendChild(specDiv);
+        
+        // Initialize Summernote on the new textarea
+        initializeSummernote(specDiv.querySelector('textarea'));
+        updateHiddenInput();
+        debug('Specification added', specDiv);
+    }
+
+    // Remove a specification row
+    function removeSpecification(button) {
+        const row = button.closest('.specification-row');
+        if (row) {
+            const container = document.getElementById('specificationsContainer');
+            // Destroy Summernote instance before removing
+            $(row.querySelector('textarea')).summernote('destroy');
+            row.remove();  // Always remove the row
+            
+            updateHiddenInput();  // Update the hidden input after removal
+            debug('Specification removed', row);
+        }
+    }
+
+    // Update hidden input with current specifications
+    function updateHiddenInput() {
+        const hiddenInput = document.getElementById('id_specifications');
+        if (!hiddenInput) return;
+
+        const specifications = {};
+        const container = document.getElementById('specificationsContainer');
+        
+        container.querySelectorAll('.specification-row').forEach(row => {
+            const titleInput = row.querySelector('input[name^="specification_title_"]');
+            const valueTextarea = row.querySelector('textarea');
+            
+            if (titleInput && valueTextarea) {
+                const title = titleInput.value.trim();
+                const value = $(valueTextarea).summernote('code').trim();
+                
+                if (title && value) {
+                    specifications[title] = value;
+                }
+            }
+        });
+
+        hiddenInput.value = JSON.stringify(specifications);
     }
 
     // Initialize specifications when the page loads
@@ -306,94 +429,7 @@
         initializeFormValidation();
     });
 
-    // Add a new specification row
-    function addSpecification(title = '', value = '') {
-        debug('Adding specification', { title, value });
-        
-        const container = document.getElementById('specificationsContainer');
-        if (!container) {
-            console.error('Specifications container not found!');
-            return;
-        }
-        
-        const specIndex = container.children.length;
-        
-        const specDiv = document.createElement('div');
-        specDiv.className = 'row specification-row mb-2 align-items-center';
-        specDiv.innerHTML = `
-            <div class="col-5">
-                <input type="text" 
-                       name="specification_title_${specIndex}" 
-                       class="form-control" 
-                       placeholder="Specification Title"
-                       value="${escapeHtml(title)}" 
-                       required>
-            </div>
-            <div class="col-6">
-                <input type="text" 
-                       name="specification_${specIndex}" 
-                       class="form-control" 
-                       placeholder="Specification Value"
-                       value="${escapeHtml(value)}" 
-                       required>
-            </div>
-            <div class="col-1">
-                <button type="button" 
-                        class="btn btn-danger btn-sm" 
-                        onclick="removeSpecification(this)"
-                        title="Remove Specification">
-                    ×
-                </button>
-            </div>
-        `;
-        
-        container.appendChild(specDiv);
-        updateHiddenInput();
-        debug('Specification added', specDiv);
-    }
-
-    // Remove a specification row
-    function removeSpecification(button) {
-        const row = button.closest('.specification-row');
-        if (row) {
-            const container = document.getElementById('specificationsContainer');
-            if (container.children.length > 1) {
-                row.remove();
-            } else {
-                // Clear inputs if it's the last row
-                row.querySelectorAll('input').forEach(input => input.value = '');
-            }
-            updateHiddenInput();
-            debug('Specification removed', row);
-        }
-    }
-
-    // Update hidden input with current specifications
-    function updateHiddenInput() {
-        const hiddenInput = document.getElementById('id_specifications');
-        if (!hiddenInput) return;
-
-        const specifications = {};
-        const container = document.getElementById('specificationsContainer');
-        
-        container.querySelectorAll('.specification-row').forEach(row => {
-            const titleInput = row.querySelector('input[name^="specification_title_"]');
-            const valueInput = row.querySelector('input[name^="specification_"]');
-            
-            if (titleInput && valueInput) {
-                const title = titleInput.value.trim();
-                const value = valueInput.value.trim();
-                
-                if (title && value) {
-                    specifications[title] = value;
-                }
-            }
-        });
-
-        hiddenInput.value = JSON.stringify(specifications);
-    }
-
-    // Initialize form validation
+    // Form validation
     function initializeFormValidation() {
         const form = document.getElementById('productForm');
         if (!form) return;
@@ -419,7 +455,7 @@
         });
     }
 
-    // Helper function to escape HTML special characters
+    // Helper function to escape HTML
     function escapeHtml(unsafe) {
         return (unsafe || '')
             .replace(/&/g, "&amp;")
@@ -428,13 +464,6 @@
             .replace(/"/g, "&quot;")
             .replace(/'/g, "&#039;");
     }
-
-    // Add button click handler
-    document.addEventListener('DOMContentLoaded', function() {
-        const addButton = document.getElementById('add-specification-btn');
-        if (addButton) {
-            addButton.addEventListener('click', () => addSpecification());
-        }
-    });
 </script>
 {% endblock %}
+

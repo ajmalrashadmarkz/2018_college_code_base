@@ -1,0 +1,72 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<header>
+    <nav class="navbar navbar-expand-lg">
+        <div class="container">
+            {% if page_title %}
+                <a class="navbar-brand" href="{% url 'home-page' %}">
+                    <div class="logo"><img src="{% static 'home_assets/media/logo.svg' %}" alt="Logo"></div>
+                </a>
+            {% else %}
+                <a class="navbar-brand" href="{% url 'home-page' %}">
+                    <div class="logo"><img src="{% static 'home_assets/media/logo-red.svg' %}" alt="Logo"></div>
+                </a>
+            {% endif %}
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="{% url 'home-page' %}">Home</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Products
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <a class="dropdown-item" href="{% url 'user_account-category_view' 1 %}">LANLINE</a>
+                            <a class="dropdown-item" href="{% url 'user_account-category_view' 2 %}">CABLINE</a>
+                            <a class="dropdown-item" href="{% url 'user_account-category_view' 4 %}">ACTLINE</a>
+                            <a class="dropdown-item" href="{% url 'user_account-category_view' 3 %}">POWLINE</a>
+                            <a class="dropdown-item" href="{% url 'user_account-category_view' 5 %}">SECLINE</a>
+                        </div>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'home-support' %}">support</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'home-partners' %}">partners</a>
+                    </li>
+                    <li>
+                        <div class='search-box'>
+                            <input class="search-text" type="text" placeholder="Search Anything">
+                            <a href="#" class="search-btn">
+                                <i class="fas fa-search"></i>
+                            </a>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+</header>
+
+{% block content %}
+<!-- Page specific content goes here -->
+
+<!-- Bootstrap JS, Popper.js, and jQuery -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+{% endblock %}
+</body>
+</html>

@@ -126,7 +126,7 @@
                             </li>
                             <li>
                                 <h4>Detailed Description</h4>
-                                <h6>{{ category.detailed_description|default:"Not provided" }}</h6>
+                                <h6>{{ category.detailed_description| safe |default:"Not provided" }}</h6>
                             </li>
                             <li>
                                 <h4>Parent Category</h4>

@@ -20,7 +20,7 @@
             <div class="card-body">
                 <form action="{% url 'admin_dashboard-product_add' %}" method="post" enctype="multipart/form-data">
                     {% csrf_token %}
-                    
+
                     <div class="row">
                         <!-- Left Column -->
                         <div class="col-md-6">
@@ -133,8 +133,9 @@
 {% endblock %}
 
 {% block extra_js %}
-<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.js"></script>
+
 <script>
     $(document).ready(function() {
         // Initialize Select2
@@ -149,45 +150,60 @@
         const addSpecificationBtn = document.getElementById('add-specification-btn');
         const hiddenSpecificationsInput = document.getElementById('id_specifications');
 
+        // Function to initialize Summernote
+        function initializeSummernote(element) {
+            $(element).summernote({
+                height: 150,
+                toolbar: [
+                    ['style', ['bold', 'italic', 'underline', 'clear']],
+                    ['font', ['strikethrough']],
+                    ['para', ['ul', 'ol']],
+                    ['insert', ['link']],
+                    ['view', ['fullscreen', 'codeview']]
+                ],
+                callbacks: {
+                    onChange: updateHiddenInput
+                }
+            });
+        }
+
         // Function to create a new specification row
         function createSpecificationRow(key = '', value = '') {
             const row = document.createElement('div');
-            row.className = 'specification-row mb-2 d-flex align-items-center';
+            row.className = 'specification-row mb-3 d-flex flex-column';
             
             // Key input
             const keyInput = document.createElement('input');
             keyInput.type = 'text';
-            keyInput.className = 'form-control me-2';
+            keyInput.className = 'form-control mb-2';
             keyInput.placeholder = 'Key (e.g., Color)';
             keyInput.value = key;
-            
-            // Value input
-            const valueInput = document.createElement('input');
-            valueInput.type = 'text';
-            valueInput.className = 'form-control me-2';
-            valueInput.placeholder = 'Value (e.g., Red)';
-            valueInput.value = value;
-            
+
+            // Value textarea (Summernote)
+            const valueTextarea = document.createElement('textarea');
+            valueTextarea.className = 'form-control specification-value';
+            valueTextarea.placeholder = 'Value (e.g., Red)';
+            valueTextarea.value = value;
+
             // Remove button
             const removeBtn = document.createElement('button');
             removeBtn.type = 'button';
-            removeBtn.className = 'btn btn-danger';
+            removeBtn.className = 'btn btn-danger mt-2';
             removeBtn.innerHTML = '&times;';
             removeBtn.onclick = () => {
                 row.remove();
                 updateHiddenInput();
             };
 
-            // Add event listeners to update hidden input when changed
-            keyInput.addEventListener('input', updateHiddenInput);
-            valueInput.addEventListener('input', updateHiddenInput);
-
-            // Append inputs and remove button to row
+            // Append elements
             row.appendChild(keyInput);
-            row.appendChild(valueInput);
+            row.appendChild(valueTextarea);
             row.appendChild(removeBtn);
 
-            return row;
+            specificationsContainer.appendChild(row);
+
+            // Initialize Summernote
+            initializeSummernote(valueTextarea);
         }
 
         // Function to update hidden input with JSON
@@ -196,25 +212,20 @@
             const specifications = {};
 
             rows.forEach(row => {
-                const keyInput = row.children[0];
-                const valueInput = row.children[1];
-                
-                const key = keyInput.value.trim();
-                const value = valueInput.value.trim();
+                const key = row.querySelector('input').value.trim();
+                const value = $(row.querySelector('textarea')).summernote('code').trim();
 
                 if (key && value) {
                     specifications[key] = value;
                 }
             });
 
-            // Update hidden input with stringified JSON
             hiddenSpecificationsInput.value = JSON.stringify(specifications);
         }
 
         // Add specification button event listener
         addSpecificationBtn.addEventListener('click', () => {
-            const newRow = createSpecificationRow();
-            specificationsContainer.appendChild(newRow);
+            createSpecificationRow();
         });
 
         // Populate existing specifications if available
@@ -223,18 +234,15 @@
                 try {
                     const existingSpecs = JSON.parse(hiddenSpecificationsInput.value);
                     Object.entries(existingSpecs).forEach(([key, value]) => {
-                        const row = createSpecificationRow(key, value);
-                        specificationsContainer.appendChild(row);
+                        createSpecificationRow(key, value);
                     });
-                } catch(e) {
+                } catch (e) {
                     console.error('Error parsing existing specifications', e);
                 }
             }
 
-            // If no existing specifications, add an initial empty row
             if (specificationsContainer.children.length === 0) {
-                const initialRow = createSpecificationRow();
-                specificationsContainer.appendChild(initialRow);
+                createSpecificationRow();
             }
         }
 
