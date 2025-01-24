@@ -1,0 +1,51 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}hubnetix{% endblock %}</title>
+    
+    {% block base_css %}
+    <!-- Bootstrap CSS -->
+    <link href="{% static 'home_assets/css/bootstrap.min.css' %}" rel="stylesheet">
+    <!-- Swiper CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Swiper/11.0.5/swiper-bundle.min.css">
+    <!-- Font Awesome CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.1/css/all.min.css">
+    <!-- Owl Carousel CSS -->
+    <link rel="stylesheet" href="{% static 'home_assets/css/owlmin.css' %}">
+    <link rel="stylesheet" href="{% static 'home_assets/css/owltheme.css' %}">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{% static 'home_assets/css/style.css' %}">
+
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    {% endblock %}
+    
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <!-- Include Header -->
+    {% include 'home_header.html' %}
+    
+    {% block content %}{% endblock %}
+    
+    <!-- Include Footer -->
+    {% include 'home_footer.html' %}
+    
+    {% block base_js %}
+    <!-- jQuery -->
+    <script src="{% static 'home_assets/js/jquery.js' %}"></script>
+    <!-- Bootstrap JS -->
+    <script src="{% static 'home_assets/js/bootstrap.js' %}"></script>
+    <!-- Swiper JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Swiper/11.0.5/swiper-bundle.min.js"></script>
+    <!-- Owl Carousel JS -->
+    <script src="{% static 'home_assets/js/owlcarousel.js' %}"></script>
+
+    
+    {% endblock %}
+    
+    {% block extra_js %}{% endblock %}
+</body>
+</html>
