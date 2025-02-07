@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="en">
+  {% load static %}
+
+
+    <head>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
+      <meta name="description" content="POS - Bootstrap Admin Template">
+      <meta name="keywords" content="admin, estimates, bootstrap, business, corporate, creative, management, minimal, modern, html5, responsive">
+      <meta name="author" content="Dreamguys - Bootstrap Admin Template">
+      <meta name="robots" content="noindex, nofollow">
+
+      <link rel="apple-touch-icon" sizes="180x180" href="{% static 'home_assets/media/logo.svg' %}">
+      <link rel="icon" type="image/png" sizes="32x32" href="{% static 'home_assets/media/logo.svg' %}">
+      <link rel="icon" type="image/png" sizes="16x16" href="{% static 'home_assets/media/logo.svg' %}">
+      <link rel="shortcut icon" type="image/x-icon" href="{% static 'home_assets/media/logo.svg' %}">
+
+      <title>Admin</title>
+
+      <!-- CSS Files -->
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
+      <link rel="stylesheet" href="{% static 'assets/css/bootstrap.min.css' %}">
+      <link rel="stylesheet" href="{% static 'assets/css/animate.css' %}">
+      <link rel="stylesheet" href="{% static 'assets/css/dataTables.bootstrap4.min.css' %}">
+      <link rel="stylesheet" href="{% static 'assets/plugins/fontawesome/css/fontawesome.min.css' %}">
+      <link rel="stylesheet" href="{% static 'assets/plugins/fontawesome/css/all.min.css' %}">
+      <link rel="stylesheet" href="{% static 'assets/css/style.css' %}">
+      <link rel="stylesheet" href="{% static 'assets/plugins/select2/css/select2.min.css' %}">
+      <link rel="stylesheet" href="{% static 'assets/plugins/lightbox/glightbox.min.css' %}">
+      <link rel="stylesheet" href="{% static 'assets/plugins/owlcarousel/owl.carousel.min.css' %}">
+      <link rel="stylesheet" href="{% static 'assets/css/bootstrap-datetimepicker.min.css' %}">
+
+      <!-- JS Files -->
+      <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+      <script src="https://cdn.tiny.cloud/1/2emtw9ub1z5hiqkoov7jmrm7mrz0ahwkt5n0tayd8mv5dkbk/tinymce/7/tinymce.min.js" referrerpolicy="origin"></script>
+
+      <!-- Optional JS for Reloading on Page Show Event -->
+      <!--
+      <script>
+        (function () {
+          window.onpageshow = function (event) {
+            if (event.persisted) {
+              window.location.reload();
+            }
+          };
+        })();
+      </script>
+      -->
+    </head>
+
+    <style>
+      /* Add your styles here or link to an external stylesheet */
+      
+      .top-nav-search {
+        position: relative;
+        display: flex;
+        align-items: center;
+      }
+    
+      #search-result {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        background-color: #fff;
+        border: 1px solid #ccc;
+        border-top: none;
+        width: 100%;
+        display: none;
+        z-index: 10;
+      }
+    
+      .dropdown-item {
+        padding: 10px;
+        border-bottom: 1px solid #ccc;
+      }
+    
+      /* Add styles for the mode button */
+      .mode-button {
+        display: inline-block;
+        width: 40px; /* Adjust the width as needed */
+        height: 20px; /* Adjust the height as needed */
+        text-align: center;
+        line-height: 20px;
+        cursor: pointer;
+      }
+    
+      /* Add styles for the icons (Font Awesome icons are font-based) */
+      .mode-button i {
+        font-size: 16px; /* Adjust the icon size as needed */
+      }
+    
+      /* Style for the clicked submenu item */
+      .clicked-submenu {
+        color: #ff0000; /* Replace with the desired color */
+      }
+    
+      /* Style for the selected link */
+      .selected-link {
+        background-color: #f2f2f2; /* Change this to your preferred highlight color */
+        color: #000; /* Change this to your preferred text color */
+        transition: background-color 0.3s ease;
+      }
+    
+      .notification-number {
+        background-color: #fdd700; /* Set background color */
+        color: #ffffff; /* Set text color */
+        padding: 0px 0px; /* Adjust padding */
+        border-radius: 50%; /* Make it a perfect circle */
+        font-size: 10px; /* Adjust font size */
+        display: inline-block; /* Ensure inline-block to properly set width and height */
+        width: 22px; /* Set the width */
+        height: 22px; /* Set the height */
+        text-align: center; /* Center text horizontally */
+        line-height: 20px; /* Center text vertically */
+      }
+    </style>
+    
+
+    <body>
+      <!-- <div id="global-loader">
+        <div class="whirly-loader"></div>
+      </div> -->
+
+      <div class="main-wrapper">
+
+        <div class="header">
+
+          <div class="header-left active">
+            <a href="{% url 'admin_dashboard-dashboard' %}" class="logo mx-5 logo-normal">
+              <img src="{% static 'home_assets/media/logo-red.svg' %}" alt>
+            </a>
+            <a href="{% url 'admin_dashboard-dashboard' %}" class="logo mx-5 logo-white">
+              <img src="{% static 'home_assets/media/logo-red.svg' %}" alt>
+            </a>
+            <a href="{% url 'admin_dashboard-dashboard' %}" class="logo-small mx-5">
+              <img src="{% static 'home_assets/media/logo-red.svg' %}" alt>
+            </a>
+            <a id="toggle_btn" href="javascript:void(0);">
+              <i data-feather="chevrons-left" class="feather-16"></i>
+            </a>
+          </div>
+          <a id="mobile_btn" class="mobile_btn" href="#sidebar">
+            <span class="bar-icon">
+              <span></span>
+              <span></span>
+              <span></span>
+            </span>
+          </a>
+          <ul class="nav user-menu">
+            <li class="nav-item nav-searchinputs">
+              <div class="top-nav-search">
+                <a href="javascript:void(0);" class="responsive-search">
+                  <i class="fa fa-search"></i>
+                </a>
+              </div>
+            </li>
+            <li class="nav-item nav-item-box">
+              <a href="javascript:void(0);" id="dark-mode-toggle" class="mode-button light-mode">
+                <i class="fas fa-sun" style="color: #67748e;"></i>
+              </a>
+            </li>
+
+
+            <li class="nav-item nav-item-box">
+              <a href="javascript:void(0);" id="btnFullscreen">
+                <i data-feather="maximize"></i>
+              </a>
+            </li>
+
+            <li class="nav-item dropdown has-arrow main-drop">
+              <a href="javascript:void(0);" class="dropdown-toggle nav-link userset" data-bs-toggle="dropdown">
+                <span class="user-info">
+                  <!-- <span class="user-letter">
+                    <img src="{% static 'assets/img/profiles/avator1.jpg' %}" alt class="img-fluid">
+                  </span> -->
+                  <span class="user-detail">
+                    {% if super_admin %}
+                    <span class="user-name">{{super_admin}}</span>
+                    <span class="user-role">Super Admin</span>
+                    {% else %}
+                    <span class="user-name">{{admin}}</span>
+                    <span class="user-role">Admin</span>
+                    {% endif %}
+                  </span>
+                </span>
+              </a>
+              <div class="dropdown-menu menu-drop-user">
+                <div class="profilename">
+                  <div class="profileset">
+                    <!-- <span class="user-img"><img src="{% static 'assets/img/profiles/avator1.jpg' %}" alt>
+                      <span class="status online"></span></span> -->
+                    <div class="profilesets">
+
+                      {% if super_admin %}
+                      <h6>{{super_admin}}</h6>
+                      <h5>Super Admin</h5>
+                      {% else %}
+                      <h5>{{admin}}</h5>
+                      <h5>Admin</h5>
+                      {% endif %}
+
+                    </div>
+                  </div>
+                  <hr class="m-0">
+                  <a class="dropdown-item" href="{% url 'admin_dashboard-dashboard' %}"><i class="me-2"
+                      data-feather="settings"></i>Reset Password</a>
+                  <hr class="m-0">
+                  <!-- <a class="dropdown-item" href="profile.html"> <i class="me-2" data-feather="user"></i> My
+                    Profile</a>
+                  <a class="dropdown-item" href="generalsettings.html"><i class="me-2"
+                      data-feather="settings"></i>Settings</a>
+                  <hr class="m-0"> -->
+                  <a class="dropdown-item logout pb-0" href="{% url 'admin_dashboard-logout' %}"><img src="{% static 'assets/img/icons/log-out.svg' %}"
+                      class="me-2" alt="img">Logout</a>
+                </div>
+              </div>
+            </li>
+          </ul>
+
+
+          <div class="dropdown mobile-user-menu">
+            <a href="javascript:void(0);" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"
+              aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
+            <div class="dropdown-menu dropdown-menu-right">
+              <!-- <a class="dropdown-item" href="profile.html">My Profile</a>
+              <a class="dropdown-item" href="generalsettings.html">Settings</a> -->
+              <a class="dropdown-item" href="{% url 'admin_dashboard-logout' %}">Logout</a>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="sidebar" id="sidebar">
+          <div class="sidebar-inner slimscroll">
+              <div id="sidebar-menu" class="sidebar-menu">
+                  <ul>
+                      <!-- Main -->
+                      <li class="submenu-open">
+                          <h6 class="submenu-hdr">Main</h6>
+                          <ul>
+                              <li>
+                                  <a href="{% url 'admin_dashboard-dashboard' %}" id="dashboard-link">
+                                      <i data-feather="grid"></i>
+                                      <span>Dashboard</span>
+                                  </a>
+                              </li>
+                          </ul>
+                      </li>
+                      
+                      <!-- Catalog -->
+                      <li class="submenu-open">
+                          <h6 class="submenu-hdr">Catalog</h6>
+                          <ul>
+                              <li>
+                                  <a href="{% url 'admin_dashboard-category_list' %}" id="category-link">
+                                      <i data-feather="folder"></i>
+                                      <span>Category</span>
+                                  </a>
+                              </li>
+                              <li>
+                                  <a href="{% url 'admin_dashboard-products_list' %}" id="product-link">
+                                      <i data-feather="box"></i>
+                                      <span>Product</span>
+                                  </a>
+                              </li>
+                          </ul>
+                      </li>
+                      
+                      <!-- Content -->
+                      <li class="submenu-open">
+                          <h6 class="submenu-hdr">Content</h6>
+                          <ul>
+                              <li>
+                                  <a href="{% url 'admin_dashboard-news_article_list' %}" id="news-link">
+                                      <i data-feather="file-text"></i>
+                                      <span>News</span>
+                                  </a>
+                              </li>
+                              <li>
+                                  <a href="{% url 'admin_dashboard-blog_post_list' %}" id="blog-link">
+                                      <i data-feather="edit"></i>
+                                      <span>Blog</span>
+                                  </a>
+                              </li>
+                          </ul>
+                      </li>
+                      
+                      <!-- Projects & Jobs -->
+                      <li class="submenu-open">
+                          <h6 class="submenu-hdr">Projects & Jobs</h6>
+                          <ul>
+                              <li>
+                                  <a href="{% url 'admin_dashboard-project_list' %}" id="projects-link">
+                                      <i data-feather="briefcase"></i>
+                                      <span>Projects</span>
+                                  </a>
+                              </li>
+                              <li>
+                                  <a href="{% url 'admin_dashboard-job_listing_list' %}" id="jobs-link">
+                                      <i data-feather="users"></i>
+                                      <span>Careers</span>
+                                  </a>
+                              </li>
+                          </ul>
+                      </li>
+                      
+                      <!-- Submissions Management -->
+                      <li class="submenu-open">
+                          <h6 class="submenu-hdr">Submissions Management</h6>
+                          <ul>
+                              <li>
+                                  <a href="{% url 'admin_dashboard-job_application_list' %}" id="job-applications-link">
+                                      <i data-feather="file"></i>
+                                      <span>Job Applications</span>
+                                  </a>
+                              </li>
+                              <li>
+                                  <a href="{% url 'admin_dashboard-contact_submission_list' %}" id="contact-submissions-link">
+                                      <i data-feather="mail"></i>
+                                      <span>Contact Submissions</span>
+                                  </a>
+                              </li>
+                              <li>
+                                  <a href="{% url 'admin_dashboard-newsletter_subscription_list' %}" id="newsletter-subscriptions-link">
+                                      <i data-feather="send"></i>
+                                      <span>Newsletter Subscriptions</span>
+                                  </a>
+                              </li>
+                          </ul>
+                      </li>
+                      
+                      <!-- Logout -->
+                      <li class="submenu-open">
+                          <ul>
+                              <li>
+                                  <a href="{% url 'admin_dashboard-logout' %}">
+                                      <i data-feather="log-out"></i>
+                                      <span>Logout</span>
+                                  </a>
+                              </li>
+                          </ul>
+                      </li>
+                  </ul>
+              </div>
+          </div>
+      </div>
+      
+        
+        
+        {% block body %}
+
+        
+
+        {% endblock body %}
+
+
+      </div>
+
+      {% block extra_js %}
+    <!-- Core Dependencies -->
+    <script src="{% static 'assets/js/jquery-3.6.0.min.js' %}"></script>
+    <script src="{% static 'assets/js/bootstrap.bundle.min.js' %}"></script>
+    <script src="{% static 'assets/js/moment.min.js' %}"></script>
+    <script src="{% static 'assets/js/feather.min.js' %}"></script>
+    <script src="{% static 'assets/js/jquery.slimscroll.min.js' %}"></script>
+
+    <!-- DataTables -->
+    <script src="{% static 'assets/js/jquery.dataTables.min.js' %}"></script>
+    <script src="{% static 'assets/js/dataTables.bootstrap4.min.js' %}"></script>
+
+    <!-- UI Enhancement Plugins -->
+    <script src="{% static 'assets/js/bootstrap-datetimepicker.min.js' %}"></script>
+    <script src="{% static 'assets/plugins/select2/js/select2.min.js' %}"></script>
+    <script src="{% static 'assets/plugins/lightbox/glightbox.min.js' %}"></script>
+    <script src="{% static 'assets/plugins/lightbox/lightbox.js' %}"></script>
+    <script src="{% static 'assets/plugins/owlcarousel/owl.carousel.min.js' %}"></script>
+
+    <!-- Charts -->
+    <script src="{% static 'assets/plugins/apexchart/apexcharts.min.js' %}"></script>
+    <script src="{% static 'assets/plugins/apexchart/chart-data.js' %}"></script>
+
+    <!-- Alert System -->
+    <script src="{% static 'assets/plugins/sweetalert/sweetalert2.all.min.js' %}"></script>
+    <script src="{% static 'assets/plugins/sweetalert/sweetalerts.min.js' %}"></script>
+
+    <!-- Application Scripts -->
+    <script>
+        // Global Configuration
+        const CONFIG = {
+            DEBUG: false,
+            SIDEBAR_STORAGE_KEY: 'sidebarScrollPosition',
+            DARK_MODE_STORAGE_KEY: 'mode',
+            ALERT_DISMISS_DELAY: 2000
+        };
+
+        // Utility Functions
+        const utils = {
+            log(message) {
+                CONFIG.DEBUG && console.log(`Debug: ${message}`);
+            },
+            
+            debounce(func, wait) {
+                let timeout;
+                return function executedFunction(...args) {
+                    const later = () => {
+                        clearTimeout(timeout);
+                        func(...args);
+                    };
+                    clearTimeout(timeout);
+                    timeout = setTimeout(later, wait);
+                };
+            }
+        };
+
+        // Initialize all modules when DOM is ready
+        document.addEventListener('DOMContentLoaded', function() {
+            // Alert System Module
+            const AlertSystem = {
+                init() {
+                    this.setupAutoDismiss();
+                },
+
+                setupAutoDismiss() {
+                    setTimeout(() => {
+                        document.querySelectorAll('.alert').forEach(alert => {
+                            alert.classList.remove('show');
+                            alert.classList.add('fade');
+                            setTimeout(() => alert.remove(), 500);
+                        });
+                    }, CONFIG.ALERT_DISMISS_DELAY);
+                }
+            };
+
+            // Search Module
+            const SearchModule = {
+                init() {
+                    this.searchInput = $('#search-input');
+                    this.searchResults = $('#search-result');
+                    
+                    if (this.searchInput.length) {
+                        this.bindSearchEvents();
+                        this.bindCloseEvents();
+                    }
+                },
+
+                bindSearchEvents() {
+                    this.searchInput.on('input', utils.debounce((e) => {
+                        const searchText = e.target.value.trim();
+                        if (searchText.length > 0) {
+                            this.performSearch(searchText);
+                        } else {
+                            this.clearResults();
+                        }
+                    }, 300));
+                },
+
+                performSearch(searchText) {
+                    $.ajax({
+                        url: "",
+                        method: 'GET',
+                        data: { 'search_text': searchText },
+                        success: (response) => this.handleSearchResults(response),
+                        error: (xhr) => console.error('Search error:', xhr.responseText)
+                    });
+                },
+
+                handleSearchResults(response) {
+                    this.searchResults.html('');
+
+                    if (response.length > 0) {
+                        response.forEach(result => {
+                            if (result.type === 'product') {
+                                this.appendProductResult(result);
+                            }
+                        });
+                        this.searchResults.show();
+                    } else {
+                        this.searchResults.html('<h5>No results found.</h5>');
+                    }
+                },
+
+                appendProductResult(result) {
+                    const maxLength = 32;
+                    const url = `/a/${result.id}/${result.name_slug}`;
+                    const productName = result.name.length > maxLength ?
+                        result.name.substring(0, maxLength) + '...' :
+                        result.name;
+
+                    const item = $('<a>')
+                        .addClass('dropdown-item')
+                        .attr('href', url)
+                        .append($('<h5>')
+                            .text(productName)
+                            .css('display', 'inline-block')
+                            .attr('title', result.name));
+                    
+                    this.searchResults.append(item);
+                },
+
+                bindCloseEvents() {
+                    // Close search on escape key
+                    document.addEventListener('keydown', (event) => {
+                        if (event.key === 'Escape') {
+                            this.clearResults();
+                        }
+                    });
+
+                    // Close search on outside click
+                    $(document).on('click', (event) => {
+                        if (!$(event.target).closest('.top-nav-search').length) {
+                            this.searchResults.hide();
+                        }
+                    });
+                },
+
+                clearResults() {
+                    this.searchInput.val('');
+                    this.searchResults.html('').hide();
+                }
+            };
+
+            // Menu Module
+            const MenuModule = {
+                init() {
+                    this.menuItems = {
+                        dashboard: { id: "dashboard-link", path: "/admin_dashboard-dashboard" },
+                        category: { id: "category-link", path: "/admin_dashboard-category_list" },
+                        products: { id: "product-link", path: "/admin_dashboard-products_list" },
+                        news: { id: "news-link", path: "/admin_dashboard-news_article_list" },
+                        blog: { id: "blog-link", path: "/admin_dashboard-blog_post_list" },
+                        projects: { id: "projects-link", path: "/admin_dashboard-project_list" },
+                        jobs: { id: "jobs-link", path: "/admin_dashboard-job_listing_list" },
+                        jobApplications: { id: "job-applications-link", path: "/admin_dashboard-job_application_list" },
+                        contactSubmissions: { id: "contact-submissions-link", path: "/admin_dashboard-contact_submission_list" },
+                        newsletterSubscriptions: { id: "newsletter-subscriptions-link", path: "/admin_dashboard-newsletter_subscription_list" }
+                    };
+
+                    this.setActiveMenuItem(window.location.pathname);
+                },
+
+                setActiveMenuItem(path) {
+                    for (const [key, item] of Object.entries(this.menuItems)) {
+                        if (new RegExp(item.path).test(path)) {
+                            this.activateMenuItem(item);
+                            break;
+                        }
+                    }
+                },
+
+                activateMenuItem(item) {
+                    const element = document.getElementById(item.id);
+                    if (element) {
+                        element.classList.add('active');
+                        if (item.parent) {
+                            const parentElement = document.getElementById(item.parent);
+                            const submenuElement = document.getElementById(`${item.parent}-submenu`);
+                            if (parentElement) parentElement.classList.add('active');
+                            if (submenuElement) {
+                                submenuElement.style.display = 'block';
+                                submenuElement.classList.add('selected-link');
+                            }
+                        }
+                    }
+                }
+            };
+
+            // Sidebar Module
+            const SidebarModule = {
+                init() {
+                    this.sidebar = document.querySelector('.sidebar-inner.slimscroll');
+                    if (!this.sidebar) return;
+
+                    this.isManuallyScrolling = false;
+                    this.lastKnownScrollPosition = parseInt(localStorage.getItem(CONFIG.SIDEBAR_STORAGE_KEY)) || 0;
+
+                    this.setupSidebar();
+                    this.bindScrollEvents();
+                    this.restoreScrollPosition();
+                },
+
+                setupSidebar() {
+                    this.sidebar.style.height = 'calc(100vh - 60px)';
+                    this.sidebar.style.overflowY = 'auto';
+                },
+
+                saveScrollPosition(scrollTop) {
+                    const position = scrollTop || this.sidebar?.scrollTop || 0;
+                    localStorage.setItem(CONFIG.SIDEBAR_STORAGE_KEY, position.toString());
+                    this.lastKnownScrollPosition = position;
+                    utils.log(`Saved scroll position: ${position}`);
+                },
+
+                restoreScrollPosition() {
+                    if (this.lastKnownScrollPosition > 0) {
+                        setTimeout(() => {
+                            this.sidebar.scrollTop = this.lastKnownScrollPosition;
+                            utils.log(`Restored scroll position: ${this.lastKnownScrollPosition}`);
+                        }, 100);
+                    }
+                },
+
+                bindScrollEvents() {
+                    let scrollTimeout;
+                    this.sidebar.addEventListener('scroll', () => {
+                        if (!this.isManuallyScrolling) this.isManuallyScrolling = true;
+                        clearTimeout(scrollTimeout);
+                        scrollTimeout = setTimeout(() => {
+                            this.saveScrollPosition(this.sidebar.scrollTop);
+                            this.isManuallyScrolling = false;
+                        }, 150);
+                    });
+
+                    document.querySelectorAll('#sidebar-menu a').forEach(link => {
+                        link.addEventListener('click', () => this.saveScrollPosition(this.sidebar.scrollTop));
+                    });
+                }
+            };
+
+            // Dark Mode Module
+            const DarkModeModule = {
+                init() {
+                    this.modeButton = document.getElementById('dark-mode-toggle');
+                    this.globalLoader = document.getElementById('global-loader');
+                    this.icon = this.modeButton?.querySelector('i');
+
+                    if (!this.modeButton || !this.icon) return;
+
+                    this.bindEvents();
+                    this.setMode();
+                },
+
+                bindEvents() {
+                    this.modeButton.addEventListener('click', () => {
+                        const newMode = this.modeButton.classList.contains('dark-mode') ? 'light' : 'dark';
+                        localStorage.setItem(CONFIG.DARK_MODE_STORAGE_KEY, newMode);
+                        this.setMode();
+                    });
+
+                    window.addEventListener('load', () => {
+                        document.body.classList.remove('mode-transition');
+                    });
+                },
+
+                setMode() {
+                    const savedMode = localStorage.getItem(CONFIG.DARK_MODE_STORAGE_KEY);
+                    const isDark = savedMode === 'dark';
+
+                    this.modeButton.classList.toggle('dark-mode', isDark);
+                    this.modeButton.classList.toggle('light-mode', !isDark);
+                    this.icon.classList.toggle('fa-moon', isDark);
+                    this.icon.classList.toggle('fa-sun', !isDark);
+                    
+                    if (this.globalLoader) {
+                        this.globalLoader.style.backgroundColor = isDark ? '#fff' : '#141432';
+                    }
+                    
+                    document.body.classList.add('mode-transition');
+                }
+            };
+
+            // Initialize all modules
+            AlertSystem.init();
+            SearchModule.init();
+            MenuModule.init();
+            SidebarModule.init();
+            DarkModeModule.init();
+
+            // Initialize Feather Icons
+            feather.replace();
+        });
+    </script>
+
+    <!-- Core Application Script -->
+    <script src="{% static 'assets/js/script.js' %}"></script>
+
+    {% block page_specific_js %}
+
+    {% endblock %}
+    {% endblock extra_js %}
+    </body>
+
+</html>
