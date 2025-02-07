@@ -43,7 +43,7 @@ from .models import NewsArticle,BlogPost,JobListing
 
 from django import forms
 from .models import NewsArticle
-from django_summernote.widgets import SummernoteWidget
+# from django_summernote.widgets import SummernoteWidget
 
 
 class NewsArticleForm(forms.ModelForm):
