@@ -75,72 +75,73 @@
     </div>
 </section>
 
-<!-- Add SweetAlert2 CDN -->
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
+{% endblock %}
+
+{% block extra_js %}
 <script>
-$(document).ready(function() {
-    $('#contactForm').on('submit', function(e) {
-        e.preventDefault();
-        
-        // Show loading state
-        Swal.fire({
-            title: 'Sending...',
-            html: 'Please wait while we process your message',
-            allowOutsideClick: false,
-            didOpen: () => {
-                Swal.showLoading();
-            }
-        });
-        
-        var formData = new FormData(this);
-        
-        $.ajax({
-            url: '{% url "submit_contact" %}',
-            type: 'POST',
-            data: formData,
-            processData: false,
-            contentType: false,
-            success: function(response) {
-                if(response.status === 'success') {
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Thank you!',
-                        text: response.message,
-                        confirmButtonColor: '#c53847'
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            $('#contactForm')[0].reset();
-                        }
-                    });
+    $(document).ready(function() {
+        $('#contactForm').on('submit', function(e) {
+            e.preventDefault();
+            
+            // Show loading state
+            Swal.fire({
+                title: 'Sending...',
+                html: 'Please wait while we process your message',
+                allowOutsideClick: false,
+                didOpen: () => {
+                    Swal.showLoading();
                 }
-            },
-            error: function(xhr) {
-                if(xhr.responseJSON && xhr.responseJSON.errors) {
-                    var errors = xhr.responseJSON.errors;
-                    var errorMessage = '<ul style="text-align: left; list-style: none; padding: 0;">';
-                    for(var field in errors) {
-                        errorMessage += `<li style="margin-bottom: 8px;">• ${field}: ${errors[field].join(', ')}</li>`;
+            });
+            
+            var formData = new FormData(this);
+            
+            $.ajax({
+                url: '{% url "submit_contact" %}',
+                type: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function(response) {
+                    if(response.status === 'success') {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Thank you!',
+                            text: response.message,
+                            confirmButtonColor: '#c53847'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                $('#contactForm')[0].reset();
+                            }
+                        });
                     }
-                    errorMessage += '</ul>';
-                    
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Oops...',
-                        html: '<div style="margin-bottom: 1rem;">Please correct the following errors:</div>' + errorMessage,
-                        confirmButtonColor: '#c53847'
-                    });
-                } else {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Oops...',
-                        text: 'An error occurred. Please try again.',
-                        confirmButtonColor: '#c53847'
-                    });
+                },
+                error: function(xhr) {
+                    if(xhr.responseJSON && xhr.responseJSON.errors) {
+                        var errors = xhr.responseJSON.errors;
+                        var errorMessage = '<ul style="text-align: left; list-style: none; padding: 0;">';
+                        for(var field in errors) {
+                            errorMessage += `<li style="margin-bottom: 8px;">• ${field}: ${errors[field].join(', ')}</li>`;
+                        }
+                        errorMessage += '</ul>';
+                        
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Oops...',
+                            html: '<div style="margin-bottom: 1rem;">Please correct the following errors:</div>' + errorMessage,
+                            confirmButtonColor: '#c53847'
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Oops...',
+                            text: 'An error occurred. Please try again.',
+                            confirmButtonColor: '#c53847'
+                        });
+                    }
                 }
-            }
+            });
         });
     });
-});
-</script>
+    </script>
 {% endblock %}

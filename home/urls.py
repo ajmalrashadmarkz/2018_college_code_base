@@ -4,7 +4,7 @@ from . import views
 urlpatterns = [
     path('charts/', views.home_page, name='home-charts'),
     path('blog/', views.home_page, name='home-blog'),
-    path('request-quote/', views.home_page, name='home-request_quote'),
+    #path('request-quote/', views.home_page, name='home-request_quote'),
     #path('projects/', views.about_page, name='home-projects'),
 
     # Quick Links
@@ -41,6 +41,8 @@ urlpatterns = [
     path('blog/<int:pk>/', views.blog_detail, name='home-blog_detail'),
 
     path('news/<int:pk>/', views.news_detail, name='home-news_detail'),
+
+    path('request-quote/', views.request_quote, name='home-request_quote'),
 
 
 

@@ -515,6 +515,31 @@ def news_detail(request, pk):
     })
 
 
+################################################################################################
+
+from django.http import JsonResponse
+from admin_dashboard.forms import QuoteRequestForm
+
+def request_quote(request):
+    print("###########################################")
+    print("test")
+    if request.method == 'POST':
+        form = QuoteRequestForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return JsonResponse({
+                'status': 'success',
+                'message': 'Your request has been submitted successfully!'
+            })
+        else:
+            return JsonResponse({
+                'status': 'error',
+                'errors': form.errors
+            }, status=400)
+    return JsonResponse({'status': 'error', 'message': 'Invalid request method'}, status=400)
+
+
+
 
 
 
