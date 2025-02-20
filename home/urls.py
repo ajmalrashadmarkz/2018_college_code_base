@@ -43,7 +43,9 @@ urlpatterns = [
     path('news/<int:pk>/', views.news_detail, name='home-news_detail'),
 
     path('request-quote/', views.request_quote, name='home-request_quote'),
-
+    path('submit-enquiry/', views.submit_customer_enquiry, name='submit_customer_enquiry'),
+    path('submit-question/',  views.submit_question, name='submit_question'),
+    path('partner-application/', views.partner_application, name='partner_application'),
 
 
 ]

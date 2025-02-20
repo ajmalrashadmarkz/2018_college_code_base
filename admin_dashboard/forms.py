@@ -394,13 +394,89 @@ class QuoteRequestForm(forms.ModelForm):
         model = QuoteRequest
         fields = ['full_name', 'email', 'phone', 'message']
 
-    def clean_phone(self):
-        phone = self.cleaned_data.get('phone')
-        if not phone.isdigit():
-            raise forms.ValidationError("Phone number should contain only digits.")
-        if len(phone) < 7 or len(phone) > 15:
-            raise forms.ValidationError("Enter a valid phone number.")
-        return phone
+    # def clean_phone(self):
+    #     phone = self.cleaned_data.get('phone')
+    #     if not phone.isdigit():
+    #         raise forms.ValidationError("Phone number should contain only digits.")
+    #     if len(phone) < 7 or len(phone) > 15:
+    #         raise forms.ValidationError("Enter a valid phone number.")
+    #     return phone
+    
+
+##################################################################################
+
+from .models import CustomerServiceEnquiry
+
+class CustomerServiceForm(forms.ModelForm):
+    class Meta:
+        model = CustomerServiceEnquiry
+        exclude = ['status', 'created_at', 'updated_at', 'deleted_at']
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        required_fields = ['first_name','last_name','email', 'address', 'phone', 'city', 'postal_code', 'subject', 'question']
+        for field in required_fields:
+            self.fields[field].required = True
+
+    # def clean_phone(self):
+    #     phone = self.cleaned_data.get('phone')
+    #     if not phone.isdigit():
+    #         raise forms.ValidationError("Phone number should contain only digits.")
+    #     if len(phone) < 7 or len(phone) > 15:
+    #         raise forms.ValidationError("Enter a valid phone number.")
+    #     return phone
+
+
+##################################################################################
+
+from .models import QuestionSubmission
+
+class QuestionSubmissionForm(forms.ModelForm):
+    class Meta:
+        model = QuestionSubmission
+        exclude = ['status', 'created_at', 'updated_at', 'deleted_at']
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        required_fields = ['name', 'email', 'phone', 'country', 'product_name', 'question']
+        for field in required_fields:
+            self.fields[field].required = True
+
+    # def clean_phone(self):
+    #     phone = self.cleaned_data.get('phone')
+    #     if not phone.isdigit():
+    #         raise forms.ValidationError("Phone number should contain only digits.")
+    #     if len(phone) < 7 or len(phone) > 15:
+    #         raise forms.ValidationError("Enter a valid phone number.")
+    #     return phone
+    
+
+##################################################################################
+
+from django import forms
+from .models import PartnerApplication
+
+class PartnerApplicationForm(forms.ModelForm):
+    class Meta:
+        model = PartnerApplication
+        fields = ['name', 'position', 'phone', 'company', 'email', 'country', 'message']
+
+    def clean_email(self):
+        email = self.cleaned_data.get('email')
+        if PartnerApplication.objects.filter(email=email, deleted_at__isnull=True).exists():
+            raise forms.ValidationError("This email has already submitted a partner application.")
+        return email
+
+    # def clean_phone(self):
+    #     phone = self.cleaned_data.get('phone')
+    #     if not phone.isdigit():
+    #         raise forms.ValidationError("Phone number should contain only digits.")
+    #     if len(phone) < 7 or len(phone) > 15:
+    #         raise forms.ValidationError("Enter a valid phone number.")
+    #     return phone
+
+
+
     
 
 

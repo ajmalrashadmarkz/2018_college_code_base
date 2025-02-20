@@ -517,7 +517,7 @@ def news_detail(request, pk):
 
 ################################################################################################
 
-from django.http import JsonResponse
+
 from admin_dashboard.forms import QuoteRequestForm
 
 def request_quote(request):
@@ -539,10 +539,63 @@ def request_quote(request):
     return JsonResponse({'status': 'error', 'message': 'Invalid request method'}, status=400)
 
 
+############################################################################################
+
+from admin_dashboard.forms import CustomerServiceForm
+
+def submit_customer_enquiry(request):
+    if request.method == 'POST':
+        form = CustomerServiceForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            return JsonResponse({
+                'status': 'success',
+                'message': 'Your enquiry has been submitted successfully!'
+            })
+        else:
+            return JsonResponse({
+                'status': 'error',
+                'errors': form.errors
+            }, status=400)
+    return JsonResponse({'status': 'error', 'message': 'Invalid request method'}, status=400)
 
 
+############################################################################################
+
+from admin_dashboard.forms import QuestionSubmissionForm
 
 
+def submit_question(request):
+    if request.method == 'POST':
+        form = QuestionSubmissionForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            return JsonResponse({
+                'status': 'success',
+                'message': 'Your question has been submitted successfully!'
+            })
+        else:
+            return JsonResponse({
+                'status': 'error',
+                'errors': form.errors
+            }, status=400)
+    return JsonResponse({'status': 'error', 'message': 'Invalid request method'}, status=400)
+
+
+############################################################################################
+
+from admin_dashboard.forms import PartnerApplicationForm
+
+def partner_application(request):
+    if request.method == 'POST':
+        form = PartnerApplicationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return JsonResponse({'status': 'success', 'message': 'Your application has been submitted successfully!'})
+        else:
+            return JsonResponse({'status': 'error', 'errors': form.errors}, status=400)
+    
+    return JsonResponse({'status': 'error', 'message': 'Invalid request method'}, status=400)
 
 
 

@@ -222,6 +222,153 @@ class QuoteRequest(models.Model):
         ordering = ['-created_at']
 
 
+##################################################################################################
+
+class CustomerServiceEnquiry(models.Model):
+    CATEGORY_CHOICES = [
+        ('general', 'General Inquiry'),
+        ('technical', 'Technical Support'),
+        ('billing', 'Billing Support'),
+        ('product', 'Product Support'),
+    ]
+
+    # Personal Information
+    first_name = models.CharField(max_length=100)
+    last_name = models.CharField(max_length=100)
+    email = models.EmailField()
+    company = models.CharField(max_length=200, blank=True)
+    
+    # Contact Information
+    address = models.CharField(max_length=255)
+    city = models.CharField(max_length=100)
+    country = models.CharField(max_length=100)
+    postal_code = models.CharField(max_length=20)
+    phone = models.CharField(max_length=20)
+    
+    # Enquiry Details
+    category = models.CharField(max_length=50, choices=CATEGORY_CHOICES)
+    subject = models.CharField(max_length=200)
+    question = models.TextField()
+    attachment = models.FileField(
+        upload_to='customer_service_attachments/',
+        blank=True,
+        validators=[FileExtensionValidator(allowed_extensions=['pdf', 'doc', 'docx', 'jpg', 'jpeg', 'png'])]
+    )
+    
+    # Metadata
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    deleted_at = models.DateTimeField(null=True, blank=True); 
+    status = models.CharField(
+        max_length=20,
+        choices=[
+            ('pending', 'Pending'),
+            ('in_progress', 'In Progress'),
+            ('resolved', 'Resolved'),
+            ('closed', 'Closed'),
+        ],
+        default='pending'
+    )
+
+    class Meta:
+        verbose_name = 'Customer Service Enquiry'
+        verbose_name_plural = 'Customer Service Enquiries'
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return f"{self.first_name} {self.last_name} - {self.subject}"
+
+
+
+##################################################################################################
+
+
+class QuestionSubmission(models.Model):
+    # Personal Information
+    name = models.CharField(max_length=100)
+    email = models.EmailField()
+    phone = models.CharField(max_length=20)
+    country = models.CharField(max_length=100)
+    
+    # Question Details
+    product_name = models.CharField(max_length=200)  
+    question = models.TextField()
+    attachment = models.FileField(
+        upload_to='question_attachments/',
+        blank=True,
+        validators=[FileExtensionValidator(allowed_extensions=['pdf', 'doc', 'docx', 'jpg', 'jpeg', 'png'])]
+    )
+    
+    # Metadata
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    deleted_at = models.DateTimeField(null=True, blank=True); 
+
+    status = models.CharField(
+        max_length=20,
+        choices=[
+            ('pending', 'Pending'),
+            ('in_progress', 'In Progress'),
+            ('answered', 'Answered'),
+            ('closed', 'Closed'),
+        ],
+        default='pending'
+    )
+    
+    class Meta:
+        ordering = ['-created_at']
+        verbose_name = 'Question Submission'
+        verbose_name_plural = 'Question Submissions'
+
+    def __str__(self):
+        return f"Question about {self.product_name} from {self.name} - {self.created_at.strftime('%Y-%m-%d')}"
+
+
+##################################################################################################
+
+from django.utils import timezone
+from django.db import models
+
+class PartnerApplication(models.Model):
+    # Personal Information
+    name = models.CharField(max_length=100)
+    position = models.CharField(max_length=100, blank=True, null=True)
+    phone = models.CharField(max_length=20)
+    
+    # Company Information
+    company = models.CharField(max_length=200)
+    email = models.EmailField(unique=True)
+    country = models.CharField(max_length=100)
+    
+    # Application Details
+    message = models.TextField()
+    
+    # Metadata
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    deleted_at = models.DateTimeField(null=True, blank=True)  # Soft delete
+    
+    status = models.CharField(
+        max_length=20,
+        choices=[
+            ('new', 'New'),
+            ('reviewing', 'Under Review'),
+            ('approved', 'Approved'),
+            ('rejected', 'Rejected'),
+        ],
+        default='new'
+    )
+
+    class Meta:
+        ordering = ['-created_at']
+        verbose_name = 'Partner Application'
+        verbose_name_plural = 'Partner Applications'
+
+    def __str__(self):
+        return f"Partner Application - {self.company} ({self.name})"
+
+
+
 
 
 
