@@ -521,8 +521,6 @@ def news_detail(request, pk):
 from admin_dashboard.forms import QuoteRequestForm
 
 def request_quote(request):
-    print("###########################################")
-    print("test")
     if request.method == 'POST':
         form = QuoteRequestForm(request.POST)
         if form.is_valid():
@@ -537,7 +535,6 @@ def request_quote(request):
                 'errors': form.errors
             }, status=400)
     return JsonResponse({'status': 'error', 'message': 'Invalid request method'}, status=400)
-
 
 ############################################################################################
 

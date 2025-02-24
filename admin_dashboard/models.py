@@ -207,6 +207,23 @@ class Project(models.Model):
 
 ##################################################################################################
 
+# class QuoteRequest(models.Model):
+#     full_name = models.CharField(max_length=100)
+#     email = models.EmailField()
+#     phone = models.CharField(max_length=20)
+#     message = models.TextField()
+#     created_at = models.DateTimeField(auto_now_add=True)
+#     is_processed = models.BooleanField(default=False)
+
+#     def __str__(self):
+#         return f"Quote Request from {self.full_name} - {self.created_at.strftime('%Y-%m-%d')}"
+
+#     class Meta:
+#         ordering = ['-created_at']
+
+
+
+
 class QuoteRequest(models.Model):
     full_name = models.CharField(max_length=100)
     email = models.EmailField()
@@ -214,12 +231,16 @@ class QuoteRequest(models.Model):
     message = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     is_processed = models.BooleanField(default=False)
+    # Correct product relation
+    product = models.ForeignKey('catalog.Product', on_delete=models.SET_NULL, null=True, blank=True)
 
     def __str__(self):
-        return f"Quote Request from {self.full_name} - {self.created_at.strftime('%Y-%m-%d')}"
+        product_name = self.product.name if self.product else "No Product"
+        return f"Quote Request from {self.full_name} - {product_name} - {self.created_at.strftime('%Y-%m-%d')}"
 
     class Meta:
         ordering = ['-created_at']
+
 
 
 ##################################################################################################

@@ -13,56 +13,7 @@
         cursor: pointer;
     } 
 </style>
-<section class="req-quote">
-    <div class="container">
-      <h2 class="title">
-        Request a Quote
-      </h2>
-      <div class="flex-area">
-        <p>Looking for tailored solutions to meet your specific needs? Contact us for a personalized quote.</p>
-        <a href="
-          " class="box-btn" data-bs-toggle="modal" data-bs-target="#exampleModalquote">Request a Quote</a>
-      </div>
-    </div>
-  </section>
 
-
-<!-- quote modal -->
-<div class="modal fade" id="exampleModalquote" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-<div class="modal-dialog">
-    <div class="modal-content">
-
-    <div class="modal-body position-relative">
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        <h2 class="title">
-        Become a Partner
-        </h2>
-        <p>Submit your inquiry and let us assist you.</p>
-        <form id="quoteRequestForm" method="POST">
-            {% csrf_token %}
-            <div class="input-area-contact">
-                <div class="inp-grp">
-                    <input type="text" name="full_name" id="full_name" placeholder="Your Full Name" required>
-                </div>
-                <div class="inp-grp">
-                    <input type="email" name="email" id="email" placeholder="Your Email" required>
-                </div>
-                <div class="inp-grp">
-                    <input type="tel" name="phone" id="phone" placeholder="Your Phone" required>
-                </div>
-                <div class="inp-grp">
-                    <textarea name="message" id="message" placeholder="Your Message" rows="3" required></textarea>
-                </div>
-            </div>
-            <button class="buy-now d-inline" type="submit">
-                <span>Submit</span>
-            </button>
-            <a href="#" class="box-btn" data-bs-dismiss="modal">Cancel</a>
-        </form>        
-    </div>
-    </div>
-</div>
-</div>
 
 <footer>
     <div class="container">
@@ -207,69 +158,7 @@
     });
     </script>
 
-    <script>
-        $(document).ready(function() {
-            $('#quoteRequestForm').on('submit', function(e) {
-                e.preventDefault();
-
-                // Show loading state
-                Swal.fire({
-                    title: 'Submitting...',
-                    html: 'Please wait a moment....',
-                    allowOutsideClick: false,
-                    didOpen: () => {
-                        Swal.showLoading();
-                    }
-                });
-
-                var formData = new FormData(this);
-
-                $.ajax({
-                    url: '{% url "home-request_quote" %}',
-                    type: 'POST',
-                    data: formData,
-                    processData: false,
-                    contentType: false,
-                    success: function(response) {
-                        if (response.status === 'success') {
-                            Swal.fire({
-                                icon: 'success',
-                                title: 'Request Submitted!',
-                                text: response.message,
-                                confirmButtonColor: '#c53847',
-                                timer: 3000,
-                                timerProgressBar: true
-                            }).then(() => {
-                                // Reset the form and close the modal
-                                $('#quoteRequestForm')[0].reset();
-                                $('#exampleModalquote').modal('hide');
-                            });
-                        }
-                    },
-                    error: function(xhr) {
-                        if (xhr.responseJSON && xhr.responseJSON.errors) {
-                            var errors = xhr.responseJSON.errors;
-                            var errorMessage = Object.values(errors).flat().join('\n');
-
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Oops...',
-                                text: errorMessage,
-                                confirmButtonColor: '#c53847'
-                            });
-                        } else {
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Oops...',
-                                text: 'An error occurred. Please try again.',
-                                confirmButtonColor: '#c53847'
-                            });
-                        }
-                    }
-                });
-            });
-        });
-    </script>
+    
 {% endblock %}
 
 

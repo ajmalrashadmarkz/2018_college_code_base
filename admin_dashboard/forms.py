@@ -389,10 +389,10 @@ class ProjectForm(forms.ModelForm):
 
 from .models import QuoteRequest
 
-class QuoteRequestForm(forms.ModelForm):
-    class Meta:
-        model = QuoteRequest
-        fields = ['full_name', 'email', 'phone', 'message']
+# class QuoteRequestForm(forms.ModelForm):
+#     class Meta:
+#         model = QuoteRequest
+#         fields = ['full_name', 'email', 'phone', 'message']
 
     # def clean_phone(self):
     #     phone = self.cleaned_data.get('phone')
@@ -401,6 +401,16 @@ class QuoteRequestForm(forms.ModelForm):
     #     if len(phone) < 7 or len(phone) > 15:
     #         raise forms.ValidationError("Enter a valid phone number.")
     #     return phone
+
+class QuoteRequestForm(forms.ModelForm):
+    product_name = forms.CharField(widget=forms.TextInput(attrs={'readonly': 'readonly'}), required=False)
+    
+    class Meta:
+        model = QuoteRequest
+        fields = ['full_name', 'email', 'phone', 'message', 'product']
+        widgets = {
+            'product': forms.HiddenInput()
+        }
     
 
 ##################################################################################
