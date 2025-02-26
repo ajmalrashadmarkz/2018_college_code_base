@@ -1,5 +1,6 @@
 from django.urls import path
 from . import views
+from django.urls import path, re_path
 
 urlpatterns = [
     path('charts/', views.home_page, name='home-charts'),
@@ -20,9 +21,11 @@ urlpatterns = [
     
     
 
-    path('category/<int:category_id>/', views.category_view, name='user_account-category_view'),
-    path('product/<int:category_id>/', views.product_list_view, name='user_account-product_list_view'),
-    path('product/detail/<int:product_id>/', views.product_detail_view, name='user_account-product_detail_view'),
+    #path('category/<int:category_id>/', views.category_view, name='user_account-category_view'),
+    path('<slug:category_slug>/', views.category_view, name='user_account-category_view'),
+    path('<slug:category_slug>/product-list/', views.product_list_view, name='user_account-product_list_view'), 
+    path('<slug:category_slug>/<slug:product_slug>/', views.product_detail_view, name='user_account-product_detail_view'),
+
 
     #JobApplication -ContactUs-NewsLetter
     path('careers/submit/', views.submit_application, name='submit_application'),
@@ -48,4 +51,6 @@ urlpatterns = [
     path('partner-application/', views.partner_application, name='partner_application'),
 
 
+
+    re_path(r'^(?P<php_filename>[\w-]+\.php)$', views.php_to_category_redirect),
 ]

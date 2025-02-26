@@ -97,16 +97,46 @@ def get_banner(category):
     return None
 
 
-def category_view(request, category_id):
-    print("###############################--category_view--####################")
-    category = get_object_or_404(Category, id=category_id)
+# def category_view(request, category_id):
+#     print("###############################--category_view--####################")
+#     category = get_object_or_404(Category, id=category_id)
     
+#     subcategories = Category.objects.filter(parent=category, deleted_at__isnull=True)
+#     banner_url = get_banner(category)
+    
+#     subcategory_count = subcategories.count()
+
+#     if subcategory_count == 0 and category_id > 5:
+#         products = Product.objects.filter(categories=category, deleted_at__isnull=True)
+        
+#         context = {
+#             'category': category,
+#             'subcategories': subcategories,
+#             'subcategory_count': subcategory_count,
+#             'products': products,
+#             'banner_url': banner_url,
+#         }
+#         return redirect('user_account-product_list_view', category_id=category.id)
+
+#     context = {
+#         'category': category,
+#         'subcategories': subcategories,
+#         'banner_url': banner_url,
+#     }
+#     print(context)
+#     return render(request, 'category_home_list.html', context)
+
+
+def category_view(request, category_slug):
+    print("###############################--category_view--####################")
+    
+    category = get_object_or_404(Category, slug=category_slug)
     subcategories = Category.objects.filter(parent=category, deleted_at__isnull=True)
     banner_url = get_banner(category)
     
     subcategory_count = subcategories.count()
 
-    if subcategory_count == 0 and category_id > 5:
+    if subcategory_count == 0:
         products = Product.objects.filter(categories=category, deleted_at__isnull=True)
         
         context = {
@@ -116,7 +146,7 @@ def category_view(request, category_id):
             'products': products,
             'banner_url': banner_url,
         }
-        return redirect('user_account-product_list_view', category_id=category.id)
+        return redirect('user_account-product_list_view', category_slug=category.slug)
 
     context = {
         'category': category,
@@ -128,13 +158,14 @@ def category_view(request, category_id):
 
 
 
+
 #####################################################################################
 
 
 
-def product_list_view(request, category_id):
+def product_list_view(request, category_slug):
     print("###############################--product_list_view_--####################")
-    category = get_object_or_404(Category, id=category_id)
+    category = get_object_or_404(Category, slug=category_slug)
     
     subcategories = Category.objects.filter(parent=category, deleted_at__isnull=True)
     banner_url = get_banner(category)
@@ -201,15 +232,23 @@ def product_list_view(request, category_id):
 
 
 
-def product_detail_view(request, product_id):
+def product_detail_view(request, category_slug, product_slug):
     print("###############################--product_detail_view--####################")
-    print(product_id)
-    product = get_object_or_404(Product.objects.select_related().prefetch_related(
-        'categories',
-        'images',
-        'specifications',
-        'documents'
-    ), pk=product_id)
+    
+    # Get the category by slug
+    category = get_object_or_404(Category, slug=category_slug)
+    
+    # Get the product by slug and ensure it belongs to the specified category
+    product = get_object_or_404(
+        Product.objects.select_related().prefetch_related(
+            'categories',
+            'images',
+            'specifications',
+            'documents'
+        ), 
+        slug=product_slug,
+        categories=category
+    )
 
     documents_by_type = {}
     for doc in product.documents.all():
@@ -221,6 +260,7 @@ def product_detail_view(request, product_id):
 
     context = {
         'product': product,
+        'category': category,
         'documents_by_type': documents_by_type,
         'banner_url': banner_url,
         'images': product.images.all(),  
@@ -595,6 +635,18 @@ def partner_application(request):
     return JsonResponse({'status': 'error', 'message': 'Invalid request method'}, status=400)
 
 
+
+
+#############################################################################################
+#############################################################################################
+
+
+
+def php_to_category_redirect(request, php_filename):
+    print("################################### PHP Redirection ###################")
+    # Strip the .php extension
+    slug = php_filename.replace('.php', '')
+    return redirect('user_account-category_view', category_slug=slug, permanent=True)
 
 
 

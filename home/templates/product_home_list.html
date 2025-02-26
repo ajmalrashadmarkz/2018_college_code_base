@@ -43,7 +43,7 @@
             {% if products %}
                 {% for product in products %}
                     <div class="col-3">
-                        <a href="{% url 'user_account-product_detail_view' product.id %}">
+                        <a href="{% url 'user_account-product_detail_view' category.slug product.slug %}">
                             <div class="blog-card pro-card list-card">
                                 <div class="blog-img position-relative">
                                     {% if product.is_best_seller %}
@@ -59,7 +59,7 @@
                                     {{ product.name }}
                                 </h2>
 
-                                <a href="{% url 'user_account-product_detail_view' product.id %}" class="b-now">
+                                <a href="{% url 'user_account-product_detail_view' category.slug product.slug %}" class="b-now">
                                     Buy Now
                                 </a>
                             </div>

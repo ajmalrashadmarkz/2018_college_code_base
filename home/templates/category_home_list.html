@@ -47,7 +47,7 @@
         <div class="row g-4 mt-1">
             {% for subcategory in subcategories %}
                 <div class="col-4">
-                    <a href="{% url 'user_account-category_view' subcategory.id %}">
+                    <a href="{% url 'user_account-category_view' subcategory.slug %}">
                         <div class="blog-card pro-card">
                             <div class="blog-img">
                                 <img src="{% if subcategory.icon %}{{ subcategory.icon.url }}{% else %}{% static 'images/default-icon.png' %}{% endif %}" 
