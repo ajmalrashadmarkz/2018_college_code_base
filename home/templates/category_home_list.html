@@ -1,6 +1,21 @@
 {% extends 'home_base.html' %}
 {% load static %}
 
+{% block meta_description %}{{ category.meta_description }}{% endblock %}
+{% block meta_keywords %}{{ category.meta_tags }}{% endblock %}
+{% block og_title %}{{ category.name }} | Hubnetix{% endblock %}
+{% block og_description %}{{ category.meta_description }}{% endblock %}
+{% block og_image %}{% if category.banner %}{{ request.scheme }}://{{ request.get_host }}{{ category.banner.url }}{% endif %}{% endblock %}
+{% block title %}{{ category.name }} | Hubnetix{% endblock %}
+
+{% block extra_header_js %}
+{% if category.canonical_url %}
+<link rel="canonical" href="{{ category.canonical_url }}">
+{% else %}
+<link rel="canonical" href="{{ request.build_absolute_uri }}">
+{% endif %}
+{% endblock %}
+
 {% block content %}
 
 <style>
@@ -14,7 +29,7 @@
 
 <!-- Banner Section -->
 <section class="sub-banner">
-    <img src="{{ banner_url }}" alt="">
+    <img src="{{ banner_url }}" alt="{{ category.banner_alt|default:category.name }}">
 </section>
 
 <!-- New Section for Name, Short Description, Detailed Description, and Side Image -->
@@ -33,7 +48,7 @@
         <div class="col-5">
           <div class="abt-img">
             <img src="{% if category.side_image %}{{ category.side_image.url }}{% else %}{% static 'images/default-image.jpg' %}{% endif %}" 
-                 alt="{{ category.name }}">
+                 alt="{{ category.side_image_alt|default:category.name }}">
           </div>
         </div>
       </div>
@@ -51,7 +66,7 @@
                         <div class="blog-card pro-card">
                             <div class="blog-img">
                                 <img src="{% if subcategory.icon %}{{ subcategory.icon.url }}{% else %}{% static 'images/default-icon.png' %}{% endif %}" 
-                                     alt="{{ subcategory.name }}" 
+                                     alt="{{ subcategory.icon_alt|default:subcategory.name }}" 
                                      class="rounded-3">
                             </div>
                             <h2>{{ subcategory.name }}</h2>
@@ -72,16 +87,8 @@
 
 {% endblock %}
 
-{% block scripts %}
-    <script src="{% static 'home_assets/js/jquery.js' %}"></script>
-    <script src="{% static 'home_assets/js/bootstrap.js' %}"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Swiper/11.0.5/swiper-bundle.min.js"></script>
-    <script src="{% static 'home_assets/js/owlcarousel.js' %}"></script>
-  <!-- Swiper JS -->
-  <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
-
-  <!-- Initialize Swiper -->
-  <script>
+{% block extra_js %}
+    <script>
     var swiper = new Swiper(".mySwiper", {
       spaceBetween: 30,
       autoplay: {

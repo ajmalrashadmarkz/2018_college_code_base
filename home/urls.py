@@ -23,7 +23,7 @@ urlpatterns = [
 
     #path('category/<int:category_id>/', views.category_view, name='user_account-category_view'),
     path('<slug:category_slug>/', views.category_view, name='user_account-category_view'),
-    path('<slug:category_slug>/product-list/', views.product_list_view, name='user_account-product_list_view'), 
+    path('product-list/<slug:category_slug>/', views.product_list_view, name='user_account-product_list_view'), 
     path('<slug:category_slug>/<slug:product_slug>/', views.product_detail_view, name='user_account-product_detail_view'),
 
 

@@ -127,6 +127,35 @@ def get_banner(category):
 #     return render(request, 'category_home_list.html', context)
 
 
+# def category_view(request, category_slug):
+#     print("###############################--category_view--####################")
+    
+#     category = get_object_or_404(Category, slug=category_slug)
+#     subcategories = Category.objects.filter(parent=category, deleted_at__isnull=True)
+#     banner_url = get_banner(category)
+    
+#     subcategory_count = subcategories.count()
+
+#     if subcategory_count == 0:
+#         products = Product.objects.filter(categories=category, deleted_at__isnull=True)
+        
+#         context = {
+#             'category': category,
+#             'subcategories': subcategories,
+#             'subcategory_count': subcategory_count,
+#             'products': products,
+#             'banner_url': banner_url,
+#         }
+#         return redirect('user_account-product_list_view', category_slug=category.slug)
+
+#     context = {
+#         'category': category,
+#         'subcategories': subcategories,
+#         'banner_url': banner_url,
+#     }
+#     print(context)
+#     return render(request, 'category_home_list.html', context)
+
 def category_view(request, category_slug):
     print("###############################--category_view--####################")
     
@@ -148,10 +177,13 @@ def category_view(request, category_slug):
         }
         return redirect('user_account-product_list_view', category_slug=category.slug)
 
+    absolute_url = request.build_absolute_uri()
+    
     context = {
         'category': category,
         'subcategories': subcategories,
         'banner_url': banner_url,
+        'absolute_url': absolute_url,
     }
     print(context)
     return render(request, 'category_home_list.html', context)

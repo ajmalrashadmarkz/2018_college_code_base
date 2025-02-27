@@ -1,25 +1,91 @@
+from django.shortcuts import render
+from functools import wraps
+from django.contrib.auth import login as auth_login
+from django.shortcuts import redirect
+from django.utils.timezone import now
+from django.contrib.auth import get_user_model
+
+User = get_user_model() 
+
 # Create your views here.
-###################################################################
-# 2024-12-16
+def seo_manager_required(view_func):
+    @wraps(view_func)
+    def wrapper(request, *args, **kwargs):
+        if 'seomanagerid' in request.session:
+            try:
+                user = User.objects.get(id=request.session['seomanagerid'])
+                if user.account_type and user.account_type.id == 2:
+                    # Update last activity timestamp
+                    request.session['last_activity'] = now().timestamp()
+                    # Temporarily login this user for the duration of this request
+                    auth_login(request, user)
+                    return view_func(request, *args, **kwargs)
+            except User.DoesNotExist:
+                pass
+        return redirect('account-login-page')
+    return wrapper
+
+
+###########################################################################
+
+from django.shortcuts import render, redirect
+from django.utils import timezone
+from django.contrib import messages
+from django.contrib.auth import logout
+from datetime import timedelta
+from django.contrib.auth.decorators import login_required
+from catalog.models import Product,Category
+from admin_dashboard.models import NewsArticle,BlogPost,JobListing
+
+
+
+
+@login_required
+@seo_manager_required
+def dashboard_view(request):
+    total_categories = Category.objects.filter(deleted_at__isnull=True).count()
+    total_products = Product.objects.filter(deleted_at__isnull=True).count()
+    total_news = NewsArticle.objects.filter(deleted_at__isnull=True).count()
+    total_blogs = BlogPost.objects.filter(deleted_at__isnull=True).count()
+    total_jobs = JobListing.objects.filter(deleted_at__isnull=True).count()
+
+    context = {
+        'total_categories': total_categories,
+        'total_products': total_products,
+        'total_news': total_news,
+        'total_blogs': total_blogs,
+        'total_jobs': total_jobs,
+    }
+    return render(request, 'seo_dashboard.html', context)
+
+@seo_manager_required
+def dashboard_logout(request):
+	logout(request)
+	request.session.clear()
+	return redirect('account-login-page')
+
+
+#####################################################################################
+#####################################################################################
+#####################################################################################
+#####################################################################################
+
+
 
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import Category,Product
 from .forms import CategoryForm,ProductForm
 from django.db.models import Q
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
-from .models import Category
 from .forms import CategoryForm
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from admin_dashboard.views import admin_required
 
-
-@admin_required
+@login_required
 def category_list(request):
     queryset = Category.objects.filter(deleted_at__isnull=True)
     
@@ -62,43 +128,18 @@ def category_list(request):
         'per_page': per_page
     }
     
-    return render(request, 'category_list.html', context)
+    return render(request, 'seo_category_list.html', context)
 
-@admin_required
-def category_create(request):
-    if request.method == 'POST':
-        form = CategoryForm(request.POST, request.FILES)
-        try:
-            if form.is_valid():
-                category = form.save()
-                messages.success(request, f'Category {category.name} created successfully')
-                return redirect('admin_dashboard-category_list')
-            else:
 
-                for field, errors in form.errors.items():
-                    for error in errors:
-                        messages.error(request, f"{form.fields[field].label}: {error}")
-        except Exception as e:
-            messages.error(request, f'An error occurred: {str(e)}')
-    else:
-        form = CategoryForm()
-    
-    return render(request, 'category_form.html', {
-        'form': form,
-        'edit_mode': False
-    })
 
-@admin_required
+@login_required
 def category_details(request, pk):
-
     category = get_object_or_404(Category, pk=pk)
-
-
-    return render(request, 'category_details.html', {'category': category})
+    return render(request, 'seo_category_details.html', {'category': category})
 
 
 
-@admin_required
+@login_required
 def category_edit(request, pk):
 
     category = get_object_or_404(Category, pk=pk)
@@ -111,7 +152,7 @@ def category_edit(request, pk):
 
                 updated_category = form.save()
                 messages.success(request, f'Category "{updated_category.name}" updated successfully')
-                return redirect('admin_dashboard-category_list')
+                return redirect('seo_dashboard-category_list')
             else:
 
                 for field, errors in form.errors.items():
@@ -123,57 +164,11 @@ def category_edit(request, pk):
 
         form = CategoryForm(instance=category)
 
-    return render(request, 'category_form.html', {
+    return render(request, 'seo_category_form.html', {
         'form': form, 
         'category': category,  
         'edit_mode': True  
     })
-
-
-
-
-@admin_required
-def category_delete(request, pk):
-    category = get_object_or_404(Category, pk=pk)
-
-    if request.method == 'POST':
-        try:
-
-            category.deleted_at = timezone.now()
-            category.is_active = False
-            category.save()
-
-
-            response_data = {
-                'success': True, 
-                'message': f'Category "{category.name}" deleted successfully',
-                'id': pk
-            }
-
-            if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
-                return JsonResponse(response_data)
-            
-
-            messages.success(request, response_data['message'])
-            return redirect('admin_dashboard-category_list')
-
-        except Exception as e:
-
-            response_data = {
-                'success': False, 
-                'error': str(e)
-            }
-
-
-            if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
-                return JsonResponse(response_data, status=400)
-            
-
-            messages.error(request, str(e))
-            return redirect('admin_dashboard-category_list')
-
-
-    return JsonResponse({'success': False, 'error': 'Invalid request method'}, status=405)
 
 
 #################################################################################################
@@ -183,7 +178,7 @@ def category_delete(request, pk):
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from .forms import ProductForm
-from .models import ProductImage,ProductDocument,ProductSpecification
+from catalog.models import ProductImage,ProductDocument,ProductSpecification
 import json
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
@@ -192,7 +187,7 @@ from django.db.models import Q
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.http import FileResponse
 
-@admin_required
+@login_required
 def product_create(request):
     if request.method == 'POST':
         form = ProductForm(request.POST, request.FILES)
@@ -228,7 +223,7 @@ def product_create(request):
 #####################################################################################################
 
 
-@admin_required
+@login_required
 def product_list(request):
     queryset = Product.objects.filter(deleted_at__isnull=True)
     
@@ -295,7 +290,7 @@ def product_list(request):
     return render(request, 'product_list.html', context)
 
 
-@admin_required
+@login_required
 def product_details(request, pk):
     product = get_object_or_404(Product.objects.select_related(
         ).prefetch_related(
@@ -355,7 +350,7 @@ def view_document(request, doc_id):
 
 from django.views.decorators.http import require_POST
 
-@admin_required
+@login_required
 @require_POST
 def delete_product_image(request, pk):
     try:
@@ -387,7 +382,7 @@ from django.http import JsonResponse
 from django.contrib import messages
 from django.utils import timezone
 
-@admin_required
+@login_required
 def product_delete(request, pk):
     product = get_object_or_404(Product, pk=pk)
 
@@ -516,7 +511,7 @@ def process_edit_form(request, product_id):
         return {"success": False, "errors": form.errors}
 
 
-@admin_required
+@login_required
 def product_edit(request, pk):
     if request.method == 'POST':
         
@@ -547,6 +542,3 @@ def product_edit(request, pk):
         }
 
     return render(request, 'product_edit_form.html', context)
-
-
-

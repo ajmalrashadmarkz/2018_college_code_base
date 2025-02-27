@@ -6,8 +6,35 @@ from datetime import timedelta
 from django.contrib.auth.decorators import login_required
 from catalog.models import Product,Category
 from .models import NewsArticle,BlogPost,JobListing
+from functools import wraps
+from django.contrib.auth import login as auth_login
+from django.shortcuts import redirect
+from django.utils.timezone import now
+from django.contrib.auth import get_user_model
+
+User = get_user_model() 
+
+def admin_required(view_func):
+    @wraps(view_func)
+    def wrapper(request, *args, **kwargs):
+        if 'adminid' in request.session:
+            try:
+                user = User.objects.get(id=request.session['adminid'])
+                if user.account_type and user.account_type.id == 1:
+                    # Update last activity timestamp
+                    request.session['last_activity'] = now().timestamp()
+                    # Temporarily login this user for the duration of this request
+                    auth_login(request, user)
+                    return view_func(request, *args, **kwargs)
+            except User.DoesNotExist:
+                pass
+        return redirect('account-login-page')
+    return wrapper
+
+from seo_dashboard.views import seo_manager_required
 
 @login_required
+@admin_required
 def dashboard_view(request):
     total_categories = Category.objects.filter(deleted_at__isnull=True).count()
     total_products = Product.objects.filter(deleted_at__isnull=True).count()
@@ -24,7 +51,7 @@ def dashboard_view(request):
     }
     return render(request, 'admin_dashboard.html', context)
 
-
+@admin_required
 def dashboard_logout(request):
 	logout(request)
 	request.session.clear()
@@ -40,6 +67,7 @@ from .models import NewsArticle
 from .forms import NewsArticleForm
 from django.shortcuts import get_object_or_404
 
+#@admin_required
 @login_required
 def news_article_list(request):
     queryset = NewsArticle.objects.filter(deleted_at__isnull=True)
@@ -89,11 +117,13 @@ def news_article_list(request):
     
     return render(request, 'news_article_list.html', context)
 
+#@admin_required
 @login_required
 def news_article_details(request, pk):
     news_article = get_object_or_404(NewsArticle, pk=pk)
     return render(request, 'news_article_details.html', {'news_article': news_article })
 
+#@admin_required
 @login_required
 def news_article_create(request):
     if request.method == 'POST':
@@ -117,6 +147,7 @@ def news_article_create(request):
         'edit_mode': False,
     })
 
+#@admin_required
 @login_required
 def news_article_edit(request, pk):
     news_article = get_object_or_404(NewsArticle, pk=pk)
@@ -147,6 +178,7 @@ def news_article_edit(request, pk):
 from django.utils import timezone
 from django.http import JsonResponse
 
+#@admin_required
 @login_required
 def news_article_delete(request, pk):
     news_article = get_object_or_404(NewsArticle, pk=pk)
@@ -196,6 +228,7 @@ def news_article_delete(request, pk):
 from .models import BlogPost
 from .forms import BlogPostForm
 
+#@admin_required
 @login_required
 def blog_post_list(request):
     queryset = BlogPost.objects.filter(deleted_at__isnull=True)
@@ -247,6 +280,7 @@ def blog_post_list(request):
     return render(request, 'blog_post_list.html', context)
 
 
+#@admin_required
 @login_required
 def blog_post_create(request):
     if request.method == 'POST':
@@ -270,6 +304,7 @@ def blog_post_create(request):
         'edit_mode': False,
     })
 
+#@admin_required
 @login_required
 def blog_post_details(request, pk):
     blog_post = get_object_or_404(BlogPost, pk=pk)
@@ -279,6 +314,7 @@ def blog_post_details(request, pk):
 from .models import BlogPost
 from .forms import BlogPostForm
 
+#@admin_required
 @login_required
 def blog_post_edit(request, pk):
     blog_post = get_object_or_404(BlogPost, pk=pk)
@@ -305,12 +341,14 @@ def blog_post_edit(request, pk):
         'edit_mode': True
     })
 
+#@admin_required
 @login_required
 def blog_post_details(request, pk):
     blog_post = get_object_or_404(BlogPost, pk=pk)
     return render(request, 'blog_post_details.html', {'blog_post': blog_post })
 
 
+#@admin_required
 @login_required
 def blog_post_delete(request, pk):
     blog_post = get_object_or_404(BlogPost, pk=pk)
@@ -363,6 +401,7 @@ from django.contrib import messages
 from .models import JobListing
 from .forms import JobListingForm
 
+#@admin_required
 @login_required
 def job_listing_list(request):
     queryset = JobListing.objects.filter(deleted_at__isnull=True)
@@ -413,12 +452,14 @@ def job_listing_list(request):
     
     return render(request, 'job_listing_list.html', context)
 
+#@admin_required
 @login_required
 def job_listing_details(request, pk):
     job_listing = get_object_or_404(JobListing, pk=pk)
     return render(request, 'job_listing_details.html', {'job_listing': job_listing})
 
 
+#@admin_required
 @login_required
 def job_listing_create(request):
     if request.method == 'POST':
@@ -436,6 +477,7 @@ def job_listing_create(request):
     
     return render(request, 'job_listing_form.html', {'form': form, 'edit_mode': False})
 
+#@admin_required
 @login_required
 def job_listing_edit(request, pk):
     job_listing = get_object_or_404(JobListing, pk=pk)
@@ -456,6 +498,7 @@ def job_listing_edit(request, pk):
     return render(request, 'job_listing_form.html', {'form': form, 'job_listing': job_listing, 'edit_mode': True})
 
 
+#@admin_required
 @login_required
 def job_listing_delete(request, pk):
     job_listing = get_object_or_404(JobListing, pk=pk)
@@ -495,6 +538,7 @@ def job_listing_delete(request, pk):
 from .models import Project
 from .forms import ProjectForm
 
+#@admin_required
 @login_required
 def project_list(request):
     queryset = Project.objects.filter(deleted_at__isnull=True)
@@ -541,11 +585,13 @@ def project_list(request):
     
     return render(request, 'project_list.html', context)
 
+#@admin_required
 @login_required
 def project_details(request, pk):
     project = get_object_or_404(Project, pk=pk)
     return render(request, 'project_details.html', {'project': project})
 
+#@admin_required
 @login_required
 def project_create(request):
     if request.method == 'POST':
@@ -571,7 +617,7 @@ def project_create(request):
 
 
 
-
+#@admin_required
 @login_required
 def project_edit(request, pk):
     project = get_object_or_404(Project, pk=pk)
@@ -598,6 +644,7 @@ def project_edit(request, pk):
         'edit_mode': True,
     })
 
+#@admin_required
 @login_required
 def project_delete(request, pk):
     project = get_object_or_404(Project, pk=pk)
@@ -641,6 +688,7 @@ def project_delete(request, pk):
 from .models import JobApplication, ContactSubmission, NewsletterSubscription
 
 # Job Application Views
+#@admin_required
 @login_required
 def job_application_list(request):
     queryset = JobApplication.objects.filter(deleted_at__isnull=True)
@@ -687,11 +735,13 @@ def job_application_list(request):
     
     return render(request, 'job_application_list.html', context)
 
+#@admin_required
 @login_required
 def job_application_details(request, pk):
     application = get_object_or_404(JobApplication, pk=pk, deleted_at__isnull=True)
     return render(request, 'job_application_details.html', {'application': application})
 
+#@admin_required
 @login_required
 def job_application_delete(request, pk):
     application = get_object_or_404(JobApplication, pk=pk, deleted_at__isnull=True)
@@ -732,6 +782,7 @@ def job_application_delete(request, pk):
 
 
 # Contact Submission Views
+#@admin_required
 @login_required
 def contact_submission_list(request):
     queryset = ContactSubmission.objects.filter(deleted_at__isnull=True)
@@ -775,11 +826,13 @@ def contact_submission_list(request):
     
     return render(request, 'contact_submission_list.html', context)
 
+#@admin_required
 @login_required
 def contact_submission_details(request, pk):
     submission = get_object_or_404(ContactSubmission, pk=pk, deleted_at__isnull=True)
     return render(request, 'contact_submission_details.html', {'submission': submission})
 
+#@admin_required
 @login_required
 def contact_submission_delete(request, pk):
     submission = get_object_or_404(ContactSubmission, pk=pk, deleted_at__isnull=True)
@@ -818,6 +871,7 @@ def contact_submission_delete(request, pk):
 ###################################################################################################
 
 # Newsletter Subscription Views
+#@admin_required
 @login_required
 def newsletter_subscription_list(request):
     queryset = NewsletterSubscription.objects.filter(deleted_at__isnull=True)
@@ -857,7 +911,7 @@ def newsletter_subscription_list(request):
     
     return render(request, 'newsletter_subscription_list.html', context)
 
-
+#@admin_required
 @login_required
 def newsletter_subscription_delete(request, pk):
     subscription = get_object_or_404(NewsletterSubscription, pk=pk, deleted_at__isnull=True)
@@ -894,6 +948,7 @@ def newsletter_subscription_delete(request, pk):
     
     return JsonResponse({'success': False, 'error': 'Invalid request method'}, status=405)
 
+#@admin_required
 @login_required
 def newsletter_subscription_toggle_status(request):
     if request.method == 'POST' and request.headers.get('X-Requested-With') == 'XMLHttpRequest':
