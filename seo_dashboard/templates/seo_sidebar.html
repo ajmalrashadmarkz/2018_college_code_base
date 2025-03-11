@@ -32,17 +32,45 @@
                               <span>Product</span>
                           </a>
                       </li>
-                      <li>
-                        <a href="{% url 'seo_dashboard-old_url_redirect_list' %}" id="product-link">
+                    </ul>
+              </li>
+
+
+              <!-- Content -->
+              <li class="submenu-open">
+                <h6 class="submenu-hdr">Content</h6>
+                <ul>
+                  <li>
+                    <a href="{% url 'seo_dashboard-news_article_list' %}" id="news-link">
+                        <i data-feather="file-text"></i><span>News</span>
+                    </a>
+                  </li>
+                  <li>
+                    <a href="{% url 'seo_dashboard-blog_post_list' %}" id="blog-link">
+                        <i data-feather="edit"></i><span>Blog</span>
+                    </a>
+                  </li>
+                  <li>
+                    <a href="{% url 'seo_dashboard-project_list' %}" id="projects-link">
+                        <i data-feather="briefcase"></i><span>Projects</span>
+                    </a>
+                </li>
+                </ul>
+            </li>
+
+              <!-- Logout -->
+              <li class="submenu-open">
+                <ul>
+                    <li>
+                        <a href="{% url 'seo_dashboard-old_url_redirect_list' %}" id="redirect-link">
                             <i data-feather="box"></i>
                             <span>URL Redirection</span>
                         </a>
                     </li>
-                  </ul>
-              </li>
-              
-              
-              
+                </ul>
+            </li>
+                      
+        
               <!-- Logout -->
               <li class="submenu-open">
                   <ul>
@@ -61,20 +89,26 @@
 
 
 {% block extra_js %}
+
+<!-- Alert dismissal script -->
+<script>
+  document.addEventListener('DOMContentLoaded', (event) => {
+      setTimeout(() => {
+          document.querySelectorAll('.alert').forEach(alert => {
+              alert.classList.remove('show');
+              alert.classList.add('fade');
+              setTimeout(() => {
+                  alert.remove();
+              }, 500); // Allow time for fade-out effect
+          });
+      }, 2000); // 2 seconds delay
+  });
+</script>
+
 <script>
   document.addEventListener("DOMContentLoaded", function () {
     // 1. Alert Dismissal Script
-    const alertDismissButtons = document.querySelectorAll("[data-dismiss='alert']");
-    alertDismissButtons.forEach((button) => {
-      button.addEventListener("click", function () {
-        const alert = button.closest(".alert");
-        if (alert) {
-          alert.style.transition = "opacity 0.5s";
-          alert.style.opacity = "0";
-          setTimeout(() => alert.remove(), 500); // Remove after fade-out
-        }
-      });
-    });
+    
 
     // 2. Active Menu Handler with Scroll-to-Active
     const currentUrl = window.location.href;

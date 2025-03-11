@@ -40,7 +40,7 @@
     <div class="row g-4 mt-3">
       {% for post in blog_posts %}
         <div class="col-4">
-          <a href="{% url 'home-blog_detail' pk=post.pk  %}">
+          <a href="{% url 'home-blog_detail' slug=post.slug %}">
             <div class="blog-card">
               <div class="blog-img">
                 {% if post.featured_image %}

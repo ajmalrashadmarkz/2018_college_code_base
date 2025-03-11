@@ -1,6 +1,13 @@
 {% extends 'home_base.html' %}
 {% load static %}
 
+{% block meta_description %}This is a static meta description for this page.{% endblock %}
+{% block meta_keywords %}static, meta, keywords, example{% endblock %}
+{% block og_title %} Home | Hubnetix{% endblock %}
+{% block og_description %}This is a static Open Graph description for this page.{% endblock %}
+{% block og_image %}https://example.com/static-image.jpg{% endblock %}
+{% block title %} Home | Hubnetix{% endblock %}
+
 {% block extra_css %}
 <style>
     a:hover {
@@ -187,7 +194,7 @@
         <div class="row g-4 mt-1">
             {% for project in projects %}
             <div class="col-4">
-                <a href="{% url 'home-project_detail' pk=project.pk %}">
+                <a href="{% url 'home-project_detail' slug=project.slug %}">
                     <div class="proj-card rounded-3">
                         <div class="proj-img position-relative">
                             {% if project.featured_image %}
@@ -255,7 +262,7 @@
         <div class="row g-4 mt-1">
             {% for post in blog_posts %}
             <div class="col-4">
-                <a href="{% url 'home-blog_detail' pk=post.pk %}">
+                <a href="{% url 'home-blog_detail' slug=post.slug %}">
                     <div class="blog-card">
                         <div class="blog-img">
                             <img src="{{ post.featured_image.url|default_if_none:'/static/home_assets/media/blog.png' }}" alt="{{ post.title }}" class="rounded-3">

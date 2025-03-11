@@ -2,6 +2,9 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 # from .fields import CustomSummernoteTextField
+from django.utils.text import slugify
+from django.utils.translation import gettext_lazy as _
+from django.db.utils import IntegrityError
 
 
 class NewsArticle(models.Model):
@@ -11,7 +14,8 @@ class NewsArticle(models.Model):
         ('industry_update', 'Industry Update'),
         ('other', 'Other'),
     ]
-
+    slug = models.SlugField(max_length=255, null=True, unique=True, blank=True, help_text=_("URL-friendly version of the article title"))
+    #slug = models.SlugField(max_length=255, null=True, blank=True, help_text=_("URL-friendly version of the article title"))
     title = models.CharField(max_length=TITLE_MAX_LENGTH, verbose_name='Title', help_text='The headline or title of the news article.')
     short_description = models.TextField(blank=True, null=True, verbose_name='Short Description', help_text='A brief summary of the news article.')
     full_content = models.TextField(blank=True, null=True, verbose_name='Full Content', help_text='The body of the news article, which can include text, images, and videos.')
@@ -19,17 +23,19 @@ class NewsArticle(models.Model):
     is_event_news = models.BooleanField(default=False, verbose_name='Is Event News', help_text='If True, this news is related to an event.')
     event_start_date = models.DateTimeField(blank=True, null=True, verbose_name='Event Start Date', help_text='The start date of the event (required if this is an event news).')
     event_end_date = models.DateTimeField(blank=True, null=True, verbose_name='Event End Date', help_text='The end date of the event (required if this is an event news).')
-    #short_description = CustomSummernoteTextField(blank=True, null=True, help_text='A brief summary of the news article.')
-    #full_content = CustomSummernoteTextField(blank=True, null=True, help_text='The body of the news article, which can include text, images, and videos.')
-    category = models.CharField(max_length=50, choices=CATEGORY_CHOICES, verbose_name='Category', help_text='Category or type of news.')
-    featured_image = models.ImageField(blank=True, null=True, upload_to='news_icons/',verbose_name='News Icon',help_text='The icon image representing the news article, shown as a thumbnail or preview image.')
+    featured_image = models.ImageField(blank=True, null=True, upload_to='news_icons/', verbose_name='News Icon', help_text='The icon image representing the news article, shown as a thumbnail or preview image.')
+    featured_image_alt = models.CharField(max_length=255, blank=True, null=True, verbose_name=_("Featured Image Alt Text"), help_text=_("Alternative text for the featured image for accessibility and SEO."))
     date_published = models.DateTimeField(verbose_name='Date Published', help_text='The publication date of the news article.')
     is_active = models.BooleanField(default=True, verbose_name='Active', help_text='A boolean field to specify if the news is active (visible on the website).')
-
+    
+    meta_tags = models.CharField(max_length=255, blank=True, null=True, help_text=_("SEO-friendly title (if different from name)"))
+    meta_description = models.TextField(blank=True, null=True, help_text=_("Short description for search engine snippets"))
+    canonical_url = models.URLField(blank=True, null=True, help_text=_("Canonical URL to avoid duplicate content"))
+    
     created_at = models.DateTimeField(auto_now_add=True, null=True, blank=True)
     updated_at = models.DateTimeField(auto_now=True, null=True, blank=True)
     deleted_at = models.DateTimeField(null=True, blank=True)
-    
+
     def __str__(self):
         return self.title
 
@@ -38,10 +44,27 @@ class NewsArticle(models.Model):
         verbose_name_plural = 'News Articles'
         ordering = ['-date_published']
 
-
-
-
-
+    def save(self, *args, **kwargs):
+        # Generate slug from title if not provided
+        if not self.slug:
+            self.slug = slugify(self.title)
+        
+        # Handle duplicate slugs
+        original_slug = self.slug
+        counter = 1
+        
+        while NewsArticle.objects.filter(slug=self.slug).exclude(id=self.id).exists():
+            self.slug = f"{original_slug}-{counter}"
+            counter += 1
+        
+        # Set default SEO fields if not provided
+        if not self.meta_tags:
+            self.meta_tags = self.title
+        
+        if not self.meta_description:
+            self.meta_description = self.short_description or self.title
+        
+        super().save(*args, **kwargs)
 
 
 class BlogPost(models.Model):
@@ -63,10 +86,18 @@ class BlogPost(models.Model):
     category = models.CharField(max_length=50, choices=CATEGORY_CHOICES, verbose_name='Category', help_text='The blog category to help organize posts.')
     tags = models.CharField(max_length=200, verbose_name='Tags', help_text='Keywords or phrases associated with the blog post.')
     featured_image = models.ImageField(upload_to='blog_images/', verbose_name='Featured Image', help_text='The image that will appear at the top of the blog post or as a thumbnail.')
+    featured_image_alt = models.CharField(max_length=255, blank=True, null=True, verbose_name='Image Alt Text', help_text='Alternative text for the featured image.')
     #author = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Author', help_text='The name of the blog post author.')
     date_published = models.DateTimeField(verbose_name='Date Published', help_text='The publication date of the blog post.')
     is_active = models.BooleanField(default=True, verbose_name='Active', help_text='A boolean field to indicate if the blog post is currently live.')
 
+    slug = models.SlugField(max_length=255, null=True, unique=True, blank=True, help_text='URL-friendly version of the blog title')
+    #slug = models.SlugField(max_length=255, null=True, blank=True, help_text='URL-friendly version of the blog title')
+    meta_tags = models.CharField(max_length=255, blank=True, null=True, help_text='SEO-friendly title (if different from name)')
+    meta_description = models.TextField(blank=True, null=True, help_text='Short description for search engine snippets')
+    canonical_url = models.URLField(blank=True, null=True, help_text='Canonical URL to avoid duplicate content')
+    
+    
     created_at = models.DateTimeField(auto_now_add=True, null=True, blank=True)
     updated_at = models.DateTimeField(auto_now=True, null=True, blank=True)
     deleted_at = models.DateTimeField(null=True, blank=True)
@@ -78,6 +109,29 @@ class BlogPost(models.Model):
         verbose_name = 'Blog Post'
         verbose_name_plural = 'Blog Posts'
         ordering = ['-date_published']
+    
+    def save(self, *args, **kwargs):
+        # Generate slug from title if not provided
+        if not self.slug:
+            self.slug = slugify(self.title)
+        
+        # Handle duplicate slugs
+        original_slug = self.slug
+        counter = 1
+        
+        while BlogPost.objects.filter(slug=self.slug).exclude(id=self.id).exists():
+            self.slug = f"{original_slug}-{counter}"
+            counter += 1
+        
+        # Set default SEO fields if not provided
+        if not self.meta_tags:
+            self.meta_tags = self.title
+        
+        if not self.meta_description:
+            self.meta_description = self.short_description or self.title
+        
+        super().save(*args, **kwargs)
+
 
 
 
@@ -189,8 +243,16 @@ class Project(models.Model):
     category = models.CharField(blank=True, null=True, max_length=50, choices=CATEGORY_CHOICES, verbose_name='Project Category', help_text='The category the project falls under.'); 
     status = models.CharField(blank=True, null=True, max_length=20, choices=STATUS_CHOICES, default='ongoing', verbose_name='Project Status', help_text='The current state of the project.'); 
     featured_image = models.ImageField(upload_to='project_images/', blank=True, null=True, verbose_name='Featured Image', help_text='An image that represents the project.'); 
-
+    featured_image_alt = models.CharField(max_length=255, blank=True, null=True, verbose_name='Image Alt Text', help_text='Alternative text for the featured image.')
+    
     is_active = models.BooleanField(default=True, verbose_name='Active', help_text='Indicates if the project is visible on the website.'); 
+    
+    slug = models.SlugField(max_length=255, null=True, unique=True, blank=True, help_text='URL-friendly version of the project title')
+    #slug = models.SlugField(max_length=255, null=True, blank=True, help_text='URL-friendly version of the blog title')
+    meta_tags = models.CharField(max_length=255, blank=True, null=True, help_text='SEO-friendly title (if different from name)')
+    meta_description = models.TextField(blank=True, null=True, help_text='Short description for search engine snippets')
+    canonical_url = models.URLField(blank=True, null=True, help_text='Canonical URL to avoid duplicate content')
+    
     
     created_at = models.DateTimeField(auto_now_add=True); 
     updated_at = models.DateTimeField(auto_now=True); 
@@ -199,10 +261,33 @@ class Project(models.Model):
 
     def __str__(self): 
         return self.title; 
+
     class Meta: 
         verbose_name = 'Project'; 
         verbose_name_plural = 'Projects'; 
         ordering = ['-created_at']
+
+    def save(self, *args, **kwargs):
+        # Generate slug from title if not provided
+        if not self.slug:
+            self.slug = slugify(self.title)
+        
+        # Handle duplicate slugs
+        original_slug = self.slug
+        counter = 1
+        
+        while Project.objects.filter(slug=self.slug).exclude(id=self.id).exists():
+            self.slug = f"{original_slug}-{counter}"
+            counter += 1
+
+        # Set default SEO fields if not provided
+        if not self.meta_tags:
+            self.meta_tags = self.title
+
+        if not self.meta_description:
+            self.meta_description = self.short_description or self.title
+
+        super().save(*args, **kwargs)
 
 
 ##################################################################################################

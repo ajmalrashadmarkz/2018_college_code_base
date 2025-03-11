@@ -1,4 +1,4 @@
-{% include 'admin_dashboard_base.html' %}
+{% include 'seo_dashboard_base.html' %}
 {% load static %}
 
 {% block head %}
@@ -65,6 +65,14 @@
                 <h4>Project Details</h4>
                 <h6>Complete project information</h6>
             </div>
+            <div class="action-buttons d-flex">
+                <a href="{% url 'seo_dashboard-project_list' %}" class="btn btn-outline-secondary me-2">
+                    <i class="fas fa-arrow-left"></i> Back to List
+                </a>
+                <a href="{% url 'seo_dashboard-project_edit' project.pk %}" class="btn btn-outline-primary">
+                    <i class="fas fa-edit"></i> Edit
+                </a>
+            </div>
         </div>
 
         {% if messages %}
@@ -86,21 +94,9 @@
             {% endif %}
                 <div class="card project-details-container">
                     <div class="card-body">
-                        <div class="d-flex justify-content-end mb-3">
-                            <a href="{% url 'admin_dashboard-project_edit' project.pk %}" class="btn btn-outline-primary me-2">
-                                <i class="fas fa-edit"></i> Edit
-                            </a>
-                            <a href="#" 
-                               class="btn btn-outline-danger" 
-                               data-bs-toggle="modal" 
-                               data-bs-target="#deleteModal"
-                               data-delete-url="{% url 'admin_dashboard-project_delete' project.pk %}"
-                               data-project-title="{{ project.title }}">
-                                <i class="fas fa-trash"></i> Delete
-                            </a>
-                        </div>
                         <ul class="project-info">
                             <li><h4>Project Name</h4><h6>{{ project.title }}</h6></li>
+                            <li><h4>Project Slug</h4><h6>{{ project.slug }}</h6></li>
                             <li><h4>Short Description</h4><h6>{{ project.short_description | safe }}</h6></li>
                             <li><h4>Content</h4><h6>{{ project.content | safe }}</h6></li>
                             <li><h4>Category</h4><h6>{{ project.get_category_display }}</h6></li>
@@ -112,19 +108,10 @@
                                     </span>
                                 </h6>
                             </li>
-                            <li>
-                                <h4>Visibility Status</h4>
-                                <h6>
-                                    {% if project.is_active %}
-                                        <span class="status-badge status-completed">Active</span>
-                                    {% else %}
-                                        <span class="status-badge status-on_hold">Inactive</span>
-                                    {% endif %}
-                                </h6>
-                            </li>
-                            <li><h4>Created At</h4><h6>{{ project.created_at|date:"F d, Y H:i" }}</h6></li>
-                            <li><h4>Last Updated</h4><h6>{{ project.updated_at|date:"F d, Y H:i" }}</h6></li>
-                        </ul>
+                            <li><h4>Featured Image Alt</h4><h6>{{ project.featured_image_alt|default:"No Alt Tag" }}</h6></li>
+                            <li><h4>Meta Tags</h4><h6>{{ project.meta_tag|default:"No Meta Tags" }}</h6></li>
+                            <li><h4>Meta Description</h4><h6>{{ project.meta_description|default:"No Meta Description" }}</h6></li>
+                        </ul>                        
                     </div>
                 </div>
             </div>
@@ -149,43 +136,7 @@
     </div>
 </div>
 
-<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="deleteModalLabel">Confirm Delete</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                Are you sure you want to delete this project?
-                <p class="text-danger">This action cannot be undone.</p>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                <form id="delete-form" method="post" action="">
-                    {% csrf_token %}
-                    <button type="submit" class="btn btn-danger">Confirm Delete</button>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js"></script>
-<script>
-document.addEventListener('DOMContentLoaded', function () {
-    const deleteModal = document.getElementById('deleteModal');
-    const deleteForm = document.getElementById('delete-form');
 
-    deleteModal.addEventListener('show.bs.modal', function (event) {
-        const button = event.relatedTarget;
-        const deleteUrl = button.getAttribute('data-delete-url');
-        const projectTitle = button.getAttribute('data-project-title');
-
-        deleteForm.action = deleteUrl;
-        const modalBody = deleteModal.querySelector('.modal-body');
-        modalBody.textContent = `Are you sure you want to delete the project "${projectTitle}"?`;
-    });
-});
-</script>
 {% endblock %}

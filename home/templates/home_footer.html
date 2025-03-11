@@ -89,8 +89,8 @@
                 <a href="{% url 'account-login-page' %}">management(official)</a>
             </div>
             <div>
-                <p>© 2024 Hubnetix Corporation. All rights reserved.</p>
-            </div>
+                <p>© <span id="year"></span> Hubnetix Corporation. All rights reserved.</p>
+            </div>            
         </div>
     </div>
 </footer>
@@ -156,9 +156,10 @@
             });
         });
     });
-    </script>
-
-    
+</script>
+<script>
+    document.getElementById("year").textContent = new Date().getFullYear();
+</script>
 {% endblock %}
 
 

@@ -67,6 +67,8 @@ urlpatterns = [
     path('newsletter-subscriptions/', views.newsletter_subscription_list, name='admin_dashboard-newsletter_subscription_list'),
     path('newsletter-subscriptions/delete/<int:pk>/', views.newsletter_subscription_delete, name='admin_dashboard-newsletter_subscription_delete'),
     path('newsletter-subscriptions/toggle-status/', views.newsletter_subscription_toggle_status, name='admin_dashboard-newsletter_subscription_toggle_status'),
+
+    path('fill-all-fields/', views.fill_all_models_fields, name='admin_dashboard-fill_all_model_fields'),
 ]
 
 

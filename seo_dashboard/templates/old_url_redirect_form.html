@@ -35,11 +35,12 @@
                 <h4>{% if edit_mode %}Edit{% else %}Add{% endif %} URL Redirect</h4>
                 <h6>{% if edit_mode %}Modify Existing{% else %}Create New{% endif %} URL Redirect</h6>
             </div>
-            <div class="page-btn">
-                <a href="{% url 'seo_dashboard-old_url_redirect_list' %}" class="btn btn-added">
-                    <img src="{% static 'assets/img/icons/eye.svg' %}" class="me-1" alt="View Redirects">View Redirects
+            <div class="action-buttons d-flex">
+                <a href="{% url 'seo_dashboard-old_url_redirect_list' %}" class="btn btn-outline-secondary me-2">
+                    <i class="fas fa-arrow-left"></i> Back to List
                 </a>
             </div>
+            
         </div>
 
         {% if messages %}

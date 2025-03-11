@@ -560,3 +560,281 @@ def old_url_redirect_delete(request, pk):
             return redirect('seo_dashboard-old_url_redirect_list')
 
     return JsonResponse({'success': False, 'error': 'Invalid request method'}, status=405)
+
+
+############################################################################################
+############################################################################################
+############################################################################################
+
+from django.shortcuts import render
+from django.db.models import Q
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
+from admin_dashboard.models import NewsArticle,BlogPost
+from .forms import NewsArticleForm
+from django.shortcuts import get_object_or_404
+
+
+def news_article_list(request):
+    queryset = NewsArticle.objects.filter(deleted_at__isnull=True)
+    
+    # Search functionality
+    search_query = request.GET.get('search', '')
+    if search_query:
+        queryset = queryset.filter(
+            Q(title__icontains=search_query) | 
+            Q(short_description__icontains=search_query) |
+            Q(full_content__icontains=search_query)
+        )
+    
+    # Sorting functionality
+    sort_by = request.GET.get('sort', 'date_published')
+    order = request.GET.get('order', 'desc')
+    
+    valid_sort_fields = ['title', 'category', 'date_published']
+    if sort_by not in valid_sort_fields:
+        sort_by = 'date_published'
+    
+    if order == 'desc':
+        queryset = queryset.order_by(f'-{sort_by}')
+    else:
+        queryset = queryset.order_by(sort_by)
+
+    # Pagination
+    page = request.GET.get('page', 1)
+    per_page = 100
+    paginator = Paginator(queryset, per_page)
+    
+    try:
+        news_articles = paginator.page(page)
+    except PageNotAnInteger:
+        news_articles = paginator.page(1)
+    except EmptyPage:
+        news_articles = paginator.page(paginator.num_pages)
+    
+    context = {
+        'news_articles': news_articles,
+        'search_query': search_query,
+        'sort_by': sort_by,
+        'order': order,
+        'total_articles': queryset.count(),
+        'per_page': per_page
+    }
+    
+    return render(request, 'seo_news_article_list.html', context)
+
+
+def news_article_details(request, pk):
+    news_article = get_object_or_404(NewsArticle, pk=pk)
+    return render(request, 'seo_news_article_details.html', {'news_article': news_article })
+
+
+
+def news_article_edit(request, pk):
+    news_article = get_object_or_404(NewsArticle, pk=pk)
+    
+    if request.method == 'POST':
+        form = NewsArticleForm(request.POST, request.FILES, instance=news_article)
+        try:
+            if form.is_valid():
+                updated_article = form.save()
+                messages.success(request, f'News article "{updated_article.title}" updated successfully')
+                return redirect('seo_dashboard-news_article_list')
+            else:
+                for field, errors in form.errors.items():
+                    for error in errors:
+                        messages.error(request, f"{form.fields[field].label}: {error}")
+        except Exception as e:
+            messages.error(request, f'An error occurred: {str(e)}')
+    else:
+        form = NewsArticleForm(instance=news_article)
+    
+    return render(request, 'seo_news_article_form.html', {
+        'form': form,
+        'news_article': news_article,
+        'edit_mode': True
+    })
+
+
+############################################################################################
+############################################################################################
+############################################################################################
+
+from .forms import BlogPostForm
+
+
+def blog_post_list(request):
+    queryset = BlogPost.objects.filter(deleted_at__isnull=True)
+    
+    # Search functionality
+    search_query = request.GET.get('search', '')
+    if search_query:
+        queryset = queryset.filter(
+            Q(title__icontains=search_query) | 
+            Q(short_description__icontains=search_query) |
+            Q(content__icontains=search_query) |
+            Q(tags__icontains=search_query)
+        )
+    
+    # Sorting functionality
+    sort_by = request.GET.get('sort', 'date_published')
+    order = request.GET.get('order', 'desc')
+    
+    valid_sort_fields = ['title', 'category', 'date_published']
+    if sort_by not in valid_sort_fields:
+        sort_by = 'date_published'
+    
+    if order == 'desc':
+        queryset = queryset.order_by(f'-{sort_by}')
+    else:
+        queryset = queryset.order_by(sort_by)
+
+    # Pagination
+    page = request.GET.get('page', 1)
+    per_page = 100
+    paginator = Paginator(queryset, per_page)
+    
+    try:
+        blog_posts = paginator.page(page)
+    except PageNotAnInteger:
+        blog_posts = paginator.page(1)
+    except EmptyPage:
+        blog_posts = paginator.page(paginator.num_pages)
+    
+    context = {
+        'blog_posts': blog_posts,
+        'search_query': search_query,
+        'sort_by': sort_by,
+        'order': order,
+        'total_posts': queryset.count(),
+        'per_page': per_page
+    }
+    
+    return render(request, 'seo_blog_post_list.html', context)
+
+def blog_post_details(request, pk):
+    blog_post = get_object_or_404(BlogPost, pk=pk)
+    return render(request, 'seo_blog_post_details.html', {'blog_post': blog_post })
+
+
+def blog_post_edit(request, pk):
+    blog_post = get_object_or_404(BlogPost, pk=pk)
+
+    if request.method == 'POST':
+        form = BlogPostForm(request.POST, request.FILES, instance=blog_post)
+        try:
+            if form.is_valid():
+                updated_post = form.save()
+                messages.success(request, f'Blog post "{updated_post.title}" updated successfully')
+                return redirect('seo_dashboard-blog_post_list')
+            else:
+                for field, errors in form.errors.items():
+                    for error in errors:
+                        messages.error(request, f"{form.fields[field].label}: {error}")
+        except Exception as e:
+            messages.error(request, f'An error occurred: {str(e)}')
+    else:
+        form = BlogPostForm(instance=blog_post)
+
+    return render(request, 'seo_blog_post_form.html', {
+        'form': form,
+        'blog_post': blog_post,
+        'edit_mode': True
+    })
+
+
+##################################################################################
+##################################################################################
+##################################################################################
+
+from admin_dashboard.models import Project
+from .forms import ProjectForm
+
+def project_list(request):
+    queryset = Project.objects.filter(deleted_at__isnull=True)
+    
+    # Search functionality
+    search_query = request.GET.get('search', '')
+    if search_query:
+        queryset = queryset.filter(
+            Q(title__icontains=search_query) | 
+            Q(short_description__icontains=search_query) |
+            Q(content__icontains=search_query)
+        )
+    
+    # Sorting functionality
+    sort_by = request.GET.get('sort', 'created_at')
+    order = request.GET.get('order', 'desc')
+    
+    valid_sort_fields = ['title', 'category', 'status', 'created_at']
+    if sort_by not in valid_sort_fields:
+        sort_by = 'created_at'
+    
+    queryset = queryset.order_by(f'-{sort_by}' if order == 'desc' else sort_by)
+    
+    # Pagination
+    page = request.GET.get('page', 1)
+    per_page = 100
+    paginator = Paginator(queryset, per_page)
+    
+    try:
+        projects = paginator.page(page)
+    except PageNotAnInteger:
+        projects = paginator.page(1)
+    except EmptyPage:
+        projects = paginator.page(paginator.num_pages)
+    
+    context = {
+        'projects': projects,
+        'search_query': search_query,
+        'sort_by': sort_by,
+        'order': order,
+        'total_projects': queryset.count(),
+        'per_page': per_page
+    }
+    
+    return render(request, 'seo_project_list.html', context)
+
+
+def project_details(request, pk):
+    project = get_object_or_404(Project, pk=pk)
+    return render(request, 'seo_project_details.html', {'project': project})
+
+
+def project_edit(request, pk):
+    project = get_object_or_404(Project, pk=pk)
+    
+    if request.method == 'POST':
+        form = ProjectForm(request.POST, request.FILES, instance=project)
+        try:
+            if form.is_valid():
+                updated_project = form.save()
+                messages.success(request, f'Project "{updated_project.title}" updated successfully.')
+                return redirect('seo_dashboard-project_list')
+            else:
+                for field, errors in form.errors.items():
+                    for error in errors:
+                        messages.error(request, f"{form.fields[field].label}: {error}")
+        except Exception as e:
+            messages.error(request, f'An error occurred: {str(e)}')
+    else:
+        form = ProjectForm(instance=project)
+    
+    return render(request, 'seo_project_form.html', {
+        'form': form,
+        'project': project,
+        'edit_mode': True,
+    })
+
+
+
+
+
+
+
+
+
+
+
+
+
+

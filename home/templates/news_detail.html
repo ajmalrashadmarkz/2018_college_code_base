@@ -1,6 +1,12 @@
 {% extends 'home_base.html' %}
 {% load static %}
-
+{% block meta_description %}{{ article.meta_description }}{% endblock %}
+{% block meta_keywords %}{{ article.meta_tags }}{% endblock %}
+{% block og_title %}{{ article.title }} | Hubnetix{% endblock %}
+{% block og_description %}{{ article.meta_description }}{% endblock %}
+{% block og_image %}{% if article.featured_image %}{{ request.scheme }}://{{ request.get_host }}{{ article.featured_image.url }}{% else %}{{ request.scheme }}://{{ request.get_host }}{% static 'home_assets/media/default-image.png' %}{% endif %}{% endblock %}
+{% block title %}{{ article.title }} | Hubnetix{% endblock %}
+{% block canonical_url %}<link rel="canonical" href="{% if article.canonical_url %}{{ article.canonical_url }}{% else %}{{ request.build_absolute_uri }}{% endif %}">{% endblock %}
 {% block content %}
 <br><br><br><br>
 

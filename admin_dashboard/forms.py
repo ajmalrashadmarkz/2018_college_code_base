@@ -118,6 +118,7 @@ class BlogPostForm(forms.ModelForm):
             'date_published': 'Specify when this post will be published.',
             'is_active': 'Check this to make the post visible on the site.',
         }
+        
 ##################################################################################################
 
 from django import forms

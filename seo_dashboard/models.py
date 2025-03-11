@@ -7,10 +7,15 @@ from django.db import models
 
 
 class OldUrlRedirect(models.Model):
+    
     URL_TYPE_CHOICES = [
         ('category', 'Category'),
         ('product', 'Product'),
+        ('news', 'News'),
+        ('blog', 'Blog'),
+        ('projects', 'Projects'),
     ]
+
 
     old_slug = models.CharField(max_length=255, unique=True, help_text="Old PHP URL slug without .php")
     new_slug = models.CharField(max_length=255, help_text="New URL slug for redirection")

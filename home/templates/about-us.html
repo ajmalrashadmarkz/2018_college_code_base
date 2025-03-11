@@ -379,7 +379,7 @@
       <div class="row g-4 mt-1">
         {% for project in projects %}
         <div class="col-4">
-            <a href="{% url 'home-project_detail' pk=project.pk %}">  {# You might want to create a project detail URL instead #}
+          <a href="{% url 'home-project_detail' slug=project.slug %}">  
                 <div class="proj-card rounded-3">
                     <div class="proj-img position-relative">
                         {% if project.featured_image %}

@@ -33,11 +33,13 @@ urlpatterns = [
     path('e-guides/', views.guide_page, name='home-e_books'),
 
     path('projects/', views.about_page, name='home-projects'),
-    path('projects/<int:pk>/', views.project_detail, name='home-project_detail'),
+    # path('projects/<int:pk>/', views.project_detail, name='home-project_detail'),
+    path('projects/<slug:slug>/', views.project_detail, name='home-project_detail'),
 
-    path('blog/<int:pk>/', views.blog_detail, name='home-blog_detail'),
+    
+    path('blog/<slug:slug>/', views.blog_detail, name='home-blog_detail'),
 
-    path('news/<int:pk>/', views.news_detail, name='home-news_detail'),
+    path('news/<slug:slug>/', views.news_detail, name='home-news_detail'),
 
     path('request-quote/', views.request_quote, name='home-request_quote'),
     path('submit-enquiry/', views.submit_customer_enquiry, name='submit_customer_enquiry'),

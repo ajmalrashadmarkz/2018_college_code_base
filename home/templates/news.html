@@ -1,6 +1,13 @@
 {% extends 'home_base.html' %}
 {% load static %}
 
+{% block meta_description %}This is a static meta description for this page.{% endblock %}
+{% block meta_keywords %}static, meta, keywords, example{% endblock %}
+{% block og_title %} NEWS | Hubnetix{% endblock %}
+{% block og_description %}This is a static Open Graph description for this page.{% endblock %}
+{% block og_image %}https://example.com/static-image.jpg{% endblock %}
+{% block title %} NEWS | Hubnetix{% endblock %}
+
 {% block content %}
 <br><br><br><br>
 
@@ -31,7 +38,7 @@
       <div class="row g-4">
           {% for article in news_articles %}
           <div class="col-4">
-              <a href="{% url 'home-news_detail' article.pk  %}">
+            <a href="{% url 'home-news_detail' article.slug %}">
                   <div class="blog-card">
                       <div class="blog-img">
                           {% if article.featured_image %}
@@ -65,7 +72,7 @@
         <div class="row g-4">
             {% for article in event_articles %}
             <div class="col-4">
-                <a href="{% url 'home-news_detail' article.pk %}">
+                <a href="{% url 'home-news_detail' article.slug %}">
                     <div class="blog-card">
                         <div class="blog-img">
                             {% if article.featured_image %}

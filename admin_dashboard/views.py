@@ -67,8 +67,7 @@ from .models import NewsArticle
 from .forms import NewsArticleForm
 from django.shortcuts import get_object_or_404
 
-#@admin_required
-
+@admin_required
 def news_article_list(request):
     queryset = NewsArticle.objects.filter(deleted_at__isnull=True)
     
@@ -117,14 +116,12 @@ def news_article_list(request):
     
     return render(request, 'news_article_list.html', context)
 
-#@admin_required
-
+@admin_required
 def news_article_details(request, pk):
     news_article = get_object_or_404(NewsArticle, pk=pk)
     return render(request, 'news_article_details.html', {'news_article': news_article })
 
-#@admin_required
-
+@admin_required
 def news_article_create(request):
     if request.method == 'POST':
         form = NewsArticleForm(request.POST, request.FILES)
@@ -147,8 +144,7 @@ def news_article_create(request):
         'edit_mode': False,
     })
 
-#@admin_required
-
+@admin_required
 def news_article_edit(request, pk):
     news_article = get_object_or_404(NewsArticle, pk=pk)
     
@@ -177,9 +173,7 @@ def news_article_edit(request, pk):
 
 from django.utils import timezone
 from django.http import JsonResponse
-
-#@admin_required
-
+@admin_required
 def news_article_delete(request, pk):
     news_article = get_object_or_404(NewsArticle, pk=pk)
 
@@ -228,8 +222,7 @@ def news_article_delete(request, pk):
 from .models import BlogPost
 from .forms import BlogPostForm
 
-#@admin_required
-
+@admin_required
 def blog_post_list(request):
     queryset = BlogPost.objects.filter(deleted_at__isnull=True)
     
@@ -280,8 +273,7 @@ def blog_post_list(request):
     return render(request, 'blog_post_list.html', context)
 
 
-#@admin_required
-
+@admin_required
 def blog_post_create(request):
     if request.method == 'POST':
         form = BlogPostForm(request.POST, request.FILES)
@@ -304,8 +296,7 @@ def blog_post_create(request):
         'edit_mode': False,
     })
 
-#@admin_required
-
+@admin_required
 def blog_post_details(request, pk):
     blog_post = get_object_or_404(BlogPost, pk=pk)
     return render(request, 'blog_post_details.html', {'blog_post': blog_post})
@@ -314,8 +305,7 @@ def blog_post_details(request, pk):
 from .models import BlogPost
 from .forms import BlogPostForm
 
-#@admin_required
-
+@admin_required
 def blog_post_edit(request, pk):
     blog_post = get_object_or_404(BlogPost, pk=pk)
 
@@ -341,15 +331,13 @@ def blog_post_edit(request, pk):
         'edit_mode': True
     })
 
-#@admin_required
-
+@admin_required
 def blog_post_details(request, pk):
     blog_post = get_object_or_404(BlogPost, pk=pk)
     return render(request, 'blog_post_details.html', {'blog_post': blog_post })
 
 
-#@admin_required
-
+@admin_required
 def blog_post_delete(request, pk):
     blog_post = get_object_or_404(BlogPost, pk=pk)
 
@@ -401,8 +389,7 @@ from django.contrib import messages
 from .models import JobListing
 from .forms import JobListingForm
 
-#@admin_required
-
+@admin_required
 def job_listing_list(request):
     queryset = JobListing.objects.filter(deleted_at__isnull=True)
     
@@ -452,15 +439,13 @@ def job_listing_list(request):
     
     return render(request, 'job_listing_list.html', context)
 
-#@admin_required
-
+@admin_required
 def job_listing_details(request, pk):
     job_listing = get_object_or_404(JobListing, pk=pk)
     return render(request, 'job_listing_details.html', {'job_listing': job_listing})
 
 
-#@admin_required
-
+@admin_required
 def job_listing_create(request):
     if request.method == 'POST':
         form = JobListingForm(request.POST)
@@ -477,8 +462,7 @@ def job_listing_create(request):
     
     return render(request, 'job_listing_form.html', {'form': form, 'edit_mode': False})
 
-#@admin_required
-
+@admin_required
 def job_listing_edit(request, pk):
     job_listing = get_object_or_404(JobListing, pk=pk)
     
@@ -498,8 +482,7 @@ def job_listing_edit(request, pk):
     return render(request, 'job_listing_form.html', {'form': form, 'job_listing': job_listing, 'edit_mode': True})
 
 
-#@admin_required
-
+@admin_required
 def job_listing_delete(request, pk):
     job_listing = get_object_or_404(JobListing, pk=pk)
     
@@ -538,8 +521,7 @@ def job_listing_delete(request, pk):
 from .models import Project
 from .forms import ProjectForm
 
-#@admin_required
-
+@admin_required
 def project_list(request):
     queryset = Project.objects.filter(deleted_at__isnull=True)
     
@@ -585,14 +567,12 @@ def project_list(request):
     
     return render(request, 'project_list.html', context)
 
-#@admin_required
-
+@admin_required
 def project_details(request, pk):
     project = get_object_or_404(Project, pk=pk)
     return render(request, 'project_details.html', {'project': project})
 
-#@admin_required
-
+@admin_required
 def project_create(request):
     if request.method == 'POST':
         form = ProjectForm(request.POST, request.FILES)
@@ -617,8 +597,7 @@ def project_create(request):
 
 
 
-#@admin_required
-
+@admin_required
 def project_edit(request, pk):
     project = get_object_or_404(Project, pk=pk)
     
@@ -644,8 +623,7 @@ def project_edit(request, pk):
         'edit_mode': True,
     })
 
-#@admin_required
-
+@admin_required
 def project_delete(request, pk):
     project = get_object_or_404(Project, pk=pk)
     
@@ -688,8 +666,7 @@ def project_delete(request, pk):
 from .models import JobApplication, ContactSubmission, NewsletterSubscription
 
 # Job Application Views
-#@admin_required
-
+@admin_required
 def job_application_list(request):
     queryset = JobApplication.objects.filter(deleted_at__isnull=True)
     
@@ -735,14 +712,12 @@ def job_application_list(request):
     
     return render(request, 'job_application_list.html', context)
 
-#@admin_required
-
+@admin_required
 def job_application_details(request, pk):
     application = get_object_or_404(JobApplication, pk=pk, deleted_at__isnull=True)
     return render(request, 'job_application_details.html', {'application': application})
 
-#@admin_required
-
+@admin_required
 def job_application_delete(request, pk):
     application = get_object_or_404(JobApplication, pk=pk, deleted_at__isnull=True)
     
@@ -782,8 +757,7 @@ def job_application_delete(request, pk):
 
 
 # Contact Submission Views
-#@admin_required
-
+@admin_required
 def contact_submission_list(request):
     queryset = ContactSubmission.objects.filter(deleted_at__isnull=True)
     
@@ -826,14 +800,12 @@ def contact_submission_list(request):
     
     return render(request, 'contact_submission_list.html', context)
 
-#@admin_required
-
+@admin_required
 def contact_submission_details(request, pk):
     submission = get_object_or_404(ContactSubmission, pk=pk, deleted_at__isnull=True)
     return render(request, 'contact_submission_details.html', {'submission': submission})
 
-#@admin_required
-
+@admin_required
 def contact_submission_delete(request, pk):
     submission = get_object_or_404(ContactSubmission, pk=pk, deleted_at__isnull=True)
     
@@ -871,8 +843,7 @@ def contact_submission_delete(request, pk):
 ###################################################################################################
 
 # Newsletter Subscription Views
-#@admin_required
-
+@admin_required
 def newsletter_subscription_list(request):
     queryset = NewsletterSubscription.objects.filter(deleted_at__isnull=True)
     
@@ -911,8 +882,7 @@ def newsletter_subscription_list(request):
     
     return render(request, 'newsletter_subscription_list.html', context)
 
-#@admin_required
-
+@admin_required
 def newsletter_subscription_delete(request, pk):
     subscription = get_object_or_404(NewsletterSubscription, pk=pk, deleted_at__isnull=True)
     
@@ -948,8 +918,7 @@ def newsletter_subscription_delete(request, pk):
     
     return JsonResponse({'success': False, 'error': 'Invalid request method'}, status=405)
 
-#@admin_required
-
+@admin_required
 def newsletter_subscription_toggle_status(request):
     if request.method == 'POST' and request.headers.get('X-Requested-With') == 'XMLHttpRequest':
         subscription_id = request.POST.get('subscription_id')
@@ -976,3 +945,63 @@ def newsletter_subscription_toggle_status(request):
             }, status=400)
     
     return JsonResponse({'success': False, 'error': 'Invalid request method'}, status=405)
+
+
+#######################################################################################
+#######################################################################################
+
+from django.utils.text import slugify
+
+@admin_required
+def fill_all_missing_fields(request, model, model_name):
+    
+    # Get all instances from the database
+    instances = model.objects.all()
+    count = 0
+    
+    for instance in instances:
+        updated = False
+        
+        # Generate slug from title if not provided
+        if not instance.slug:
+            base_slug = slugify(instance.title)
+            instance.slug = base_slug
+            updated = True
+            
+            # Handle duplicate slugs
+            original_slug = instance.slug
+            counter = 1
+            
+            while model.objects.filter(slug=instance.slug).exclude(id=instance.id).exists():
+                instance.slug = f"{original_slug}-{counter}"
+                counter += 1
+        
+        # Set default SEO fields if not provided
+        if not instance.meta_tags:
+            instance.meta_tags = instance.title
+            updated = True
+        
+        if not instance.meta_description:
+            instance.meta_description = instance.short_description or instance.title
+            updated = True
+        
+        # Only save if we made changes
+        if updated:
+            # Use save method directly on the model to avoid infinite recursion
+            super(model, instance).save()
+            count += 1
+
+
+@admin_required
+def fill_all_models_fields(request):
+    models = [
+        (BlogPost, "blog posts"),
+        (Project, "projects"),
+        (NewsArticle, "news articles"),
+    ]
+
+    for model, model_name in models:
+        fill_all_missing_fields(request, model, model_name)
+
+    messages.success(request, "Updated all blog posts, projects, and news articles with missing fields.")
+    return redirect('admin_dashboard-dashboard')  # Update with your actual URL name

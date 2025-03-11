@@ -403,30 +403,48 @@ def subscribe_newsletter(request):
 
 ################################################################################################
 
-def project_detail(request, pk):
-    project = get_object_or_404(Project, pk=pk, is_active=True, deleted_at__isnull=True)
+# def project_detail(request, pk):
+#     project = get_object_or_404(Project, pk=pk, is_active=True, deleted_at__isnull=True)
     
+#     context = {
+#         'banner_url': "home_assets/media/abt-banner.jpg",
+#         'project': project
+#     }
+    
+#     return render(request, 'project_detail.html', context)
+
+def project_detail(request, slug):
+    project = get_object_or_404(Project, slug=slug, is_active=True, deleted_at__isnull=True)
+    
+    absolute_url = request.build_absolute_uri()
+
     context = {
         'banner_url': "home_assets/media/abt-banner.jpg",
-        'project': project
+        'project': project,
+        'absolute_url': absolute_url
     }
     
     return render(request, 'project_detail.html', context)
 
 ################################################################################################
 
-def blog_detail(request, pk):
+
+
+def blog_detail(request, slug):
     post = get_object_or_404(
         BlogPost,
-        pk=pk,
+        slug=slug,
         is_active=True,
         deleted_at__isnull=True,
         date_published__lte=timezone.now()
     )
 
+    absolute_url = request.build_absolute_uri()
+
     context = {
         'post': post,
-        'banner_url': "home_assets/media/resources_bg.jpg"
+        'banner_url': "home_assets/media/resources_bg.jpg",
+        'absolute_url': absolute_url
     }
     
     return render(request, 'blog_detail.html', context)
@@ -434,11 +452,15 @@ def blog_detail(request, pk):
 
 ################################################################################################
 
-def news_detail(request, pk):
-    article = get_object_or_404(NewsArticle, pk=pk, is_active=True, deleted_at__isnull=True)
 
+def news_detail(request, slug):
+    article = get_object_or_404(NewsArticle, slug=slug, is_active=True, deleted_at__isnull=True)
+    
+    absolute_url = request.build_absolute_uri()
+    
     return render(request, 'news_detail.html', {
-        'article': article
+        'article': article,
+        'absolute_url': absolute_url
     })
 
 
@@ -528,15 +550,6 @@ def partner_application(request):
 #############################################################################################
 
 
-
-# def php_to_category_redirect(request, php_filename):
-#     print("################################### PHP Redirection ###################")
-#     # Strip the .php extension
-#     slug = php_filename.replace('.php', '')
-#     return redirect('user_account-category_view', category_slug=slug, permanent=True)
-
-
-
 from django.shortcuts import redirect, get_object_or_404
 from seo_dashboard.models import OldUrlRedirect
 from django.http import Http404  
@@ -544,12 +557,11 @@ from django.http import Http404
 def php_to_new_url_redirect(request, php_filename):
     print("#########################################")
     slug = php_filename.replace('.php', '')
-
     try:
         old_url_entry = get_object_or_404(OldUrlRedirect, old_slug=slug)
     except Http404:
         return redirect('home-page', permanent=True)
-
+    
     if old_url_entry.url_type == 'category':
         return redirect('user_account-category_view', 
                         category_slug=old_url_entry.new_slug, 
@@ -558,7 +570,6 @@ def php_to_new_url_redirect(request, php_filename):
         try:
             product = Product.objects.get(slug=old_url_entry.new_slug)
             category = product.categories.first()
-
             if category:
                 return redirect('user_account-product_detail_view', 
                                 category_slug=category.slug,
@@ -570,19 +581,21 @@ def php_to_new_url_redirect(request, php_filename):
                                 product_slug=old_url_entry.new_slug, 
                                 permanent=True)
         except Product.DoesNotExist:
-            raise Http404(f"Product not found for slug: {old_url_entry.new_slug}")
-        
-    # elif old_url_entry.url_type == 'blog':
-    #     # Assuming you have a blog view name - adjust as needed
-    #     return redirect('user_account-blog_view', 
-    #                     blog_slug=old_url_entry.new_slug, 
-    #                     permanent=True)
-    # elif old_url_entry.url_type == 'news':
-    #     # Assuming you have a news view name - adjust as needed
-    #     return redirect('user_account-news_view', 
-    #                     news_slug=old_url_entry.new_slug, 
-    #                     permanent=True)
-
-    return redirect('home-page', permanent=True)
+            return redirect('home-page', permanent=True)
+    
+    elif old_url_entry.url_type == 'news':
+        return redirect('home-news_detail',
+                        slug=old_url_entry.new_slug,
+                        permanent=True)
+    elif old_url_entry.url_type == 'blog':
+        return redirect('home-blog_detail',
+                        slug=old_url_entry.new_slug,
+                        permanent=True)
+    elif old_url_entry.url_type == 'projects':
+        return redirect('home-project_detail',
+                        slug=old_url_entry.new_slug,
+                        permanent=True)
+    else:
+        return redirect('home-page')
 
 

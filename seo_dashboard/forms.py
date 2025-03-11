@@ -2,6 +2,8 @@ from django import forms
 from catalog.models import Category
 from django.core.exceptions import ValidationError
 #from django_summernote.fields import SummernoteWidget
+from admin_dashboard.models import NewsArticle,BlogPost,Project
+
 
 
 class CategoryForm(forms.ModelForm):
@@ -13,10 +15,10 @@ class CategoryForm(forms.ModelForm):
             'icon', 'icon_alt', 'banner', 'banner_alt', 'side_image', 'side_image_alt'
         ]
         widgets = {
-            'name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter category name'}),
+            'name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter category name', 'readonly': 'readonly'}),
             'slug': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter slug'}),
-            'short_description': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter short description'}),
-            'detailed_description': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Enter detailed description'}),
+            'short_description': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter short description', 'readonly': 'readonly'}),
+            'detailed_description': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Enter detailed description', 'readonly': 'readonly'}),
             'meta_tags': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter meta tags'}),
             'meta_description': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Enter meta description'}),
             'canonical_url': forms.URLInput(attrs={'class': 'form-control', 'placeholder': 'Enter canonical URL'}),
@@ -62,7 +64,6 @@ class CategoryForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
 
         # Required fields for SEO team
-        self.fields['name'].required = True
         self.fields['slug'].required = True
         self.fields['short_description'].required = True
         self.fields['meta_description'].required = True
@@ -84,8 +85,16 @@ class ProductForm(forms.ModelForm):
         model = Product
         fields = [
             'name', 'slug', 'short_description', 'detailed_description',
-            'main_image', 'main_image_alt', 'meta_tags', 'meta_description', 'canonical_url'
+            'main_image', 'main_image_alt', 'meta_tags', 'meta_description'
         ]
+        widgets = {
+            'name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter category name', 'readonly': 'readonly'}),
+            'slug': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter slug'}),
+            'short_description': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter short description', 'readonly': 'readonly'}),
+            'detailed_description': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Enter detailed description', 'readonly': 'readonly'}),
+            'meta_tags': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter meta tags'}),
+            'meta_description': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Enter meta description'}),
+        }
 
 class ProductImageForm(forms.ModelForm):
     # Add this to make the field not required for new instances
@@ -145,6 +154,177 @@ class OldUrlRedirectForm(forms.ModelForm):
         if '.php' in old_slug:
             raise ValidationError("The old slug should not contain '.php'.")
         return old_slug
+    
+######################################################################################
+
+
+
+class NewsArticleForm(forms.ModelForm):
+    class Meta:
+        model = NewsArticle
+        fields = [
+            'title', 'slug', 'short_description', 'full_content', 
+            'featured_image', 'featured_image_alt',
+            'meta_tags', 'meta_description', 'canonical_url'
+        ]
+        widgets = {
+            'title': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter article title', 'readonly': 'readonly'}),
+            'slug': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter slug'}),
+            'short_description': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Enter short description', 'rows': 3, 'readonly': 'readonly'}),
+            'full_content': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Enter full content', 'readonly': 'readonly'}),
+            'featured_image': forms.FileInput(attrs={'class': 'form-control'}),
+            'featured_image_alt': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter image alt text'}),
+            'date_published': forms.DateTimeInput(attrs={'class': 'form-control', 'type': 'datetime-local'}),
+            'meta_tags': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter meta tags'}),
+            'meta_description': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Enter meta description', 'rows': 3}),
+        }
+        labels = {
+            'title': 'Article Title',
+            'slug': 'Slug',
+            'short_description': 'Short Description',
+            'full_content': 'Content',
+            'featured_image': 'Featured Image',
+            'featured_image_alt': 'Featured Image Alt Text',
+            'date_published': 'Date Published',
+            'meta_tags': 'Meta Tags',
+            'meta_description': 'Meta Description',
+            
+        }
+        help_texts = {
+            'title': 'The headline or title of the news article',
+            'slug': 'URL-friendly version of the article title',
+            'short_description': 'A brief summary of the news article',
+            'full_content': 'The body of the news article, which can include text, images, and videos',
+            'featured_image': 'The image representing the news article, shown as a thumbnail or preview',
+            'featured_image_alt': 'Alternative text for the featured image for accessibility and SEO',
+            'date_published': 'The publication date of the news article',
+            'meta_tags': 'SEO-friendly tags for better visibility',
+            'meta_description': 'Short description for search engine snippets',
+            
+        }
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        
+        # Required fields for SEO team
+        
+        self.fields['slug'].required = True
+        self.fields['short_description'].required = True
+        self.fields['meta_description'].required = True
+        
+        
+        
+        # Add Bootstrap error styling if validation fails
+        for field_name, field in self.fields.items():
+            if self.errors.get(field_name):
+                field.widget.attrs.update({'class': 'form-control is-invalid'})
+    
+##########################################################################
+
+
+class BlogPostForm(forms.ModelForm):
+    class Meta:
+        model = BlogPost
+        fields = [
+            'title',
+            'author',
+            'short_description',
+            'content',
+            'tags',
+            'featured_image',
+            'featured_image_alt',
+            'slug',
+            'meta_tags',
+            'meta_description',
+        ]
+        widgets = {
+            'title': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter the blog title'}),
+            'author': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter author name', 'readonly': 'readonly'}),
+            'short_description': forms.Textarea(attrs={'class': 'form-control', 'rows': 3, 'placeholder': 'Enter a short teaser', 'readonly': 'readonly'}),
+            'content': forms.Textarea(attrs={'class': 'form-control', 'rows': 10, 'placeholder': 'Enter the full content', 'readonly': 'readonly'}),
+            'tags': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter tags separated by commas'}),
+            'featured_image': forms.ClearableFileInput(attrs={'class': 'form-control'}),
+            'featured_image_alt': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Describe the image for accessibility'}),
+            'slug': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'URL-friendly version of the title'}),
+            'meta_tags': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'SEO-friendly title'}),
+            'meta_description': forms.Textarea(attrs={'class': 'form-control', 'rows': 2, 'placeholder': 'Short description for search engine snippets'}),
+        }
+        labels = {
+            'title': 'Post Title',
+            'author': 'Author',
+            'short_description': 'Short Description',
+            'content': 'Blog Content',
+            'tags': 'Tags',
+            'featured_image': 'Featured Image',
+            'featured_image_alt': 'Image Alt Text',
+            'slug': 'Slug',
+            'meta_tags': 'Meta Tags',
+            'meta_description': 'Meta Description',
+        }
+        help_texts = {
+            'title': 'Provide a concise and catchy title for your blog post.',
+            'author': 'Enter the name of the author of this blog post.',
+            'short_description': 'Give readers a brief idea about the blog post.',
+            'content': 'Write the full content of your blog post here.',
+            'tags': 'Separate tags with commas to help with search and organization.',
+            'featured_image': 'Upload an image to represent your post.',
+            'featured_image_alt': 'Describe the image for accessibility and SEO purposes.',
+            'slug': 'URL-friendly version of the title (will be auto-generated if left blank).',
+            'meta_tags': 'SEO-friendly title if different from the post title.',
+            'meta_description': 'Short description for search engine results (keep under 160 characters).',
+        }
+
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['title'].widget.attrs['readonly'] = True 
+
+
+####################################################################################
+
+class ProjectForm(forms.ModelForm):
+    class Meta:
+        model = Project
+        fields = [
+            'title',
+            'short_description',
+            'content',
+            'featured_image',
+            'featured_image_alt',
+            'slug',
+            'meta_tags',
+            'meta_description',
+        ]
+        widgets = {
+            'title': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter the project title', 'readonly': 'readonly'}),
+            'short_description': forms.Textarea(attrs={'class': 'form-control', 'rows': 10, 'placeholder': 'Provide a brief summary of the project', 'readonly': 'readonly'}),
+            'content': forms.Textarea(attrs={'class': 'form-control', 'rows': 10, 'placeholder': 'Provide detailed information about the project', 'readonly': 'readonly'}),
+            'featured_image': forms.FileInput(attrs={'class': 'form-control'}),
+            'featured_image_alt': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Alternative text for the image'}),
+            'slug': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'URL-friendly version of the title'}),
+            'meta_tags': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'SEO-friendly title'}),
+            'meta_description': forms.Textarea(attrs={'class': 'form-control', 'rows': 3, 'placeholder': 'Short description for search engines'}),
+        }
+        labels = {
+            'title': 'Project Title',
+            'short_description': 'Short Description',
+            'content': 'Project Content',
+            'featured_image': 'Featured Image',
+            'featured_image_alt': 'Image Alt Text',
+            'slug': 'URL Slug',
+            'meta_tags': 'Meta Tags',
+            'meta_description': 'Meta Description',
+        }
+        help_texts = {
+            'title': 'The title of the project.',
+            'short_description': 'A brief summary of the project.',
+            'content': 'Detailed information about the project, its objectives, scope, and significance.',
+            'featured_image': 'An image that represents the project.',
+            'featured_image_alt': 'Alternative text for the featured image.',
+            'slug': 'URL-friendly version of the project title',
+            'meta_tags': 'SEO-friendly title (if different from name)',
+            'meta_description': 'Short description for search engine snippets',
+        }
 
 
 
