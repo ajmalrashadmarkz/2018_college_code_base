@@ -1,0 +1,406 @@
+{% extends 'home_base.html' %}
+{% load static %}
+
+{% block meta_description %}This is a static meta description for this page.{% endblock %}
+{% block meta_keywords %}static, meta, keywords, example{% endblock %}
+{% block og_title %} About Us | Hubnetix{% endblock %}
+{% block og_description %}This is a static Open Graph description for this page.{% endblock %}
+{% block og_image %}https://example.com/static-image.jpg{% endblock %}
+{% block title %} About Us | Hubnetix{% endblock %}
+
+
+{% block content %}
+<br><br><br><br>
+
+<style>
+    a:hover {
+        color: inherit;
+        text-decoration: none;
+    }
+</style>
+
+<!-- Banner Section -->
+<section class="banner" style="background-image: url({% static banner_url %}); background-size: cover; background-position: center; height: 300px;">
+    <div class="container h-100">
+        <div class="row h-100 align-items-center">
+            <div class="col-md-6 text-white">
+                <!-- Add content here if needed -->
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="about-home position-relative about-pro">
+
+    <div class="container">
+      <div class="row g-5 ">
+        <div class="col-6">
+          <h2 class="title">
+            <span> </span> Company History
+          </h2>
+
+          <p>Over the years, following expansion into the markets across the Middle East, Africa and Asia, the company
+            has established its reputation by continuously focusing on the key industrial sectors – ICT, system
+            integrators, contractors, government, healthcare, production, education, commercial enterprises,
+            manufacturing, retail and services, public sector and transport, financial services, media, technology and
+            energy. </p>
+
+        </div>
+        <div class="col-6">
+          <div class="abt-img">
+            <img src="{% static 'home_assets/media/abt-r.png' %}" alt="" class="rounded-3">
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="values">
+    <div class="container">
+      <div class="text-center">
+        <h2 class="title">
+          Core Values
+        </h2>
+        <p>At HUBNETIX, our values define who we are and how we operate. They guide our mission to deliver <br>
+          exceptional
+          solutions, foster meaningful relationships, and drive innovation across industries.</p>
+      </div>
+      <div class="row mt-5">
+        <div class="col-3">
+          <div class="cer-card">
+            <div class="cer-img">
+              <img src="{% static 'home_assets/media/ci1.png' %}" alt="">
+            </div>
+            <h3><span>Innovation </span> </h3>
+            <p>Driving progress with cutting-edge solutions.</p>
+          </div>
+        </div>
+        <div class="col-3">
+          <div class="cer-card">
+            <div class="cer-img">
+              <img src="{% static 'home_assets/media/ci2.png' %}" alt="">
+            </div>
+            <h3><span>Integrity </span> </h3>
+            <p>Upholding transparency in every interaction.</p>
+          </div>
+        </div>
+        <div class="col-3">
+          <div class="cer-card">
+            <div class="cer-img">
+              <img src="{% static 'home_assets/media/ci3.png' %}" alt="">
+            </div>
+            <h3><span>Excellence </span> </h3>
+            <p>Delivering quality in all our products and services.</p>
+          </div>
+        </div>
+        <div class="col-3">
+          <div class="cer-card">
+            <div class="cer-img">
+              <img src="{% static 'home_assets/media/ci4.png' %}" alt="">
+            </div>
+            <h3><span>Customer Focus </span> </h3>
+            <p>Prioritizing customer needs with tailored solutions.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="meet-team">
+    <div class="container">
+      <div class="text-center">
+        <h2 class="title">
+          Meet Our Team of Experts
+        </h2>
+        <p>Our team is the backbone of our success. Comprising experienced professionals and innovative thinkers, we
+          work together to deliver exceptional solutions tailored to our clients' needs. Driven by a shared commitment
+          to excellence and collaboration, our diverse team brings expertise, passion, and dedication to every project.
+        </p>
+      </div>
+      <div class="row mt-4 g-4">
+        <div class="col-3">
+          <div class="profile-card">
+            <div class="profile-img">
+              <img src="{% static 'home_assets/media/profile.jpg' %}" alt="">
+            </div>
+            <div class="prof-foot">
+              <div>
+                <h3>Amritha Jayan</h3>
+                <h4>Project Manager</h4>
+              </div>
+              <div class="prof-social">
+                <a href="http://" target="_blank" rel="noopener noreferrer">
+                  <i class="fa-brands fa-linkedin" aria-hidden="true"></i>
+                </a>
+                <a href="http://" target="_blank" rel="noopener noreferrer">
+                  <i class="fa-brands fa-facebook" aria-hidden="true"></i>
+                </a>
+                <a href="http://" target="_blank" rel="noopener noreferrer">
+                  <i class="fa-brands fa-twitter" aria-hidden="true"></i>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Repeat the above block for each team member -->
+        <div class="col-3">
+            <div class="profile-card">
+              <div class="profile-img">
+                <img src="{% static 'home_assets/media/profile.jpg' %}" alt="">
+              </div>
+              <div class="prof-foot">
+                <div>
+                  <h3>Amritha Jayan</h3>
+                  <h4>Project Manager</h4>
+                </div>
+                <div class="prof-social">
+                  <a href="http://" target="_blank" rel="noopener noreferrer">
+                    <i class="fa-brands fa-linkedin" aria-hidden="true"></i>
+                  </a>
+                  <a href="http://" target="_blank" rel="noopener noreferrer">
+                    <i class="fa-brands fa-facebook" aria-hidden="true"></i>
+                  </a>
+                  <a href="http://" target="_blank" rel="noopener noreferrer">
+                    <i class="fa-brands fa-twitter" aria-hidden="true"></i>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Repeat the above block for each team member -->
+        <div class="col-3">
+            <div class="profile-card">
+              <div class="profile-img">
+                <img src="{% static 'home_assets/media/profile.jpg' %}" alt="">
+              </div>
+              <div class="prof-foot">
+                <div>
+                  <h3>Amritha Jayan</h3>
+                  <h4>Project Manager</h4>
+                </div>
+                <div class="prof-social">
+                  <a href="http://" target="_blank" rel="noopener noreferrer">
+                    <i class="fa-brands fa-linkedin" aria-hidden="true"></i>
+                  </a>
+                  <a href="http://" target="_blank" rel="noopener noreferrer">
+                    <i class="fa-brands fa-facebook" aria-hidden="true"></i>
+                  </a>
+                  <a href="http://" target="_blank" rel="noopener noreferrer">
+                    <i class="fa-brands fa-twitter" aria-hidden="true"></i>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Repeat the above block for each team member -->
+        <div class="col-3">
+            <div class="profile-card">
+              <div class="profile-img">
+                <img src="{% static 'home_assets/media/profile.jpg' %}" alt="">
+              </div>
+              <div class="prof-foot">
+                <div>
+                  <h3>Amritha Jayan</h3>
+                  <h4>Project Manager</h4>
+                </div>
+                <div class="prof-social">
+                  <a href="http://" target="_blank" rel="noopener noreferrer">
+                    <i class="fa-brands fa-linkedin" aria-hidden="true"></i>
+                  </a>
+                  <a href="http://" target="_blank" rel="noopener noreferrer">
+                    <i class="fa-brands fa-facebook" aria-hidden="true"></i>
+                  </a>
+                  <a href="http://" target="_blank" rel="noopener noreferrer">
+                    <i class="fa-brands fa-twitter" aria-hidden="true"></i>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Repeat the above block for each team member -->
+        <div class="col-3">
+            <div class="profile-card">
+              <div class="profile-img">
+                <img src="{% static 'home_assets/media/profile.jpg' %}" alt="">
+              </div>
+              <div class="prof-foot">
+                <div>
+                  <h3>Amritha Jayan</h3>
+                  <h4>Project Manager</h4>
+                </div>
+                <div class="prof-social">
+                  <a href="http://" target="_blank" rel="noopener noreferrer">
+                    <i class="fa-brands fa-linkedin" aria-hidden="true"></i>
+                  </a>
+                  <a href="http://" target="_blank" rel="noopener noreferrer">
+                    <i class="fa-brands fa-facebook" aria-hidden="true"></i>
+                  </a>
+                  <a href="http://" target="_blank" rel="noopener noreferrer">
+                    <i class="fa-brands fa-twitter" aria-hidden="true"></i>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Repeat the above block for each team member -->
+        <div class="col-3">
+            <div class="profile-card">
+              <div class="profile-img">
+                <img src="{% static 'home_assets/media/profile.jpg' %}" alt="">
+              </div>
+              <div class="prof-foot">
+                <div>
+                  <h3>Amritha Jayan</h3>
+                  <h4>Project Manager</h4>
+                </div>
+                <div class="prof-social">
+                  <a href="http://" target="_blank" rel="noopener noreferrer">
+                    <i class="fa-brands fa-linkedin" aria-hidden="true"></i>
+                  </a>
+                  <a href="http://" target="_blank" rel="noopener noreferrer">
+                    <i class="fa-brands fa-facebook" aria-hidden="true"></i>
+                  </a>
+                  <a href="http://" target="_blank" rel="noopener noreferrer">
+                    <i class="fa-brands fa-twitter" aria-hidden="true"></i>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Repeat the above block for each team member -->
+        <div class="col-3">
+            <div class="profile-card">
+              <div class="profile-img">
+                <img src="{% static 'home_assets/media/profile.jpg' %}" alt="">
+              </div>
+              <div class="prof-foot">
+                <div>
+                  <h3>Amritha Jayan</h3>
+                  <h4>Project Manager</h4>
+                </div>
+                <div class="prof-social">
+                  <a href="http://" target="_blank" rel="noopener noreferrer">
+                    <i class="fa-brands fa-linkedin" aria-hidden="true"></i>
+                  </a>
+                  <a href="http://" target="_blank" rel="noopener noreferrer">
+                    <i class="fa-brands fa-facebook" aria-hidden="true"></i>
+                  </a>
+                  <a href="http://" target="_blank" rel="noopener noreferrer">
+                    <i class="fa-brands fa-twitter" aria-hidden="true"></i>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Repeat the above block for each team member -->
+        <div class="col-3">
+            <div class="profile-card">
+              <div class="profile-img">
+                <img src="{% static 'home_assets/media/profile.jpg' %}" alt="">
+              </div>
+              <div class="prof-foot">
+                <div>
+                  <h3>Amritha Jayan</h3>
+                  <h4>Project Manager</h4>
+                </div>
+                <div class="prof-social">
+                  <a href="http://" target="_blank" rel="noopener noreferrer">
+                    <i class="fa-brands fa-linkedin" aria-hidden="true"></i>
+                  </a>
+                  <a href="http://" target="_blank" rel="noopener noreferrer">
+                    <i class="fa-brands fa-facebook" aria-hidden="true"></i>
+                  </a>
+                  <a href="http://" target="_blank" rel="noopener noreferrer">
+                    <i class="fa-brands fa-twitter" aria-hidden="true"></i>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="values ach-mile">
+    <div class="container">
+      <div class="text-center">
+        <h2 class="title">
+          Achievements and Milestones
+        </h2>
+        <p>Our journey is defined by remarkable achievements and milestones that showcase our dedication to innovation
+          and excellence. Our commitment to customer satisfaction has earned us trust and recognition, while our
+          sustainability initiatives highlight our responsibility toward a better future. Each milestone motivates us to
+          continue pushing boundaries and delivering unparalleled value to our clients.</p>
+      </div>
+      <div class="row mt-5">
+        <div class="col-4">
+          <div class="cer-card">
+            <div class="cer-img">
+              <img src="{% static 'home_assets/media/mi3.png' %}" alt="">
+            </div>
+            <h3>Global Presence </h3>
+            <p>Delivering solutions that cater to diverse industries worldwide.</p>
+          </div>
+        </div>
+        <div class="col-4">
+          <div class="cer-card">
+            <div class="cer-img">
+              <img src="{% static 'home_assets/media/mi1.png' %}" alt="">
+            </div>
+            <h3>Innovative Solutions </h3>
+            <p>Specializing in advanced cabling, network systems, and security technologies.</p>
+          </div>
+        </div>
+        <div class="col-4">
+          <div class="cer-card">
+            <div class="cer-img">
+              <img src="{% static 'home_assets/media/mi2.png' %}" alt="">
+            </div>
+            <h3>Recognition and Trust </h3>
+            <p>Earning loyalty and accolades through quality and customer satisfaction.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+    <section class="proje about-proje">
+    <div class="container">
+      <div class="text-center">
+        <h2 class="title">
+          Our Projects
+        </h2>
+
+        <p>Our case studies showcase successful projects that highlight our innovative solutions, while our <br> client
+          reports offer insights into the results and value delivered to our clients.</p>
+      </div>
+
+
+      <div class="row g-4 mt-1">
+        {% for project in projects %}
+        <div class="col-4">
+          <a href="{% url 'home-project_detail' slug=project.slug %}">  
+                <div class="proj-card rounded-3">
+                    <div class="proj-img position-relative">
+                        {% if project.featured_image %}
+                            <img src="{{ project.featured_image.url }}" alt="{{ project.featured_image_alt }}" class="rounded-3">
+                        {% else %}
+                            <img src="{% static 'home_assets/media/default-image.png' %}" alt="Default Project Image" class="rounded-3">
+                        {% endif %}
+                        <div class="pro-text">
+                            <h3>{{ project.title }}</h3>
+                            <p>{{ project.short_description|striptags|truncatewords:10 }}</p>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </section>
+  
+
+
+
+{% endblock %}
