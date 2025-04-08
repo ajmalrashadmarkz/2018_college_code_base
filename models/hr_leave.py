@@ -20,7 +20,15 @@
 #    If not, see <http://www.gnu.org/licenses/>.
 #
 #############################################################################
-from . import hr_employee
-from . import hr_employee_base
-from . import hr_leave
-from . import hr_leave_type
+from odoo import fields, models
+
+
+class HrLeave(models.Model):
+    """ Adds field to show leave duration on hr_leave """
+    _inherit = 'hr.leave'
+
+    duration_display = fields.Char(
+        string='Requested (Days/Hours)', compute='_compute_duration_display',
+        store=True, help="Field allowing to see the leave request duration "
+                         "in days or hours depending on the "
+                         "leave_type_request_unit")
