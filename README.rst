@@ -1,38 +1,38 @@
-.. image:: https://img.shields.io/badge/licence-LGPL--3-green.svg
-   :target: https://www.gnu.org/licenses/lgpl-3.0-standalone.html
-   :alt: License: LGPL-3
+.. image:: https://img.shields.io/badge/license-AGPL--3-blue.svg
+    :target: https://www.gnu.org/licenses/agpl-3.0-standalone.html
+    :alt: License: AGPL-3
 
-Open HRMS HR Dashboard
-======================
-Keep your eyes on your whole Human resource analysis.
+Advance HR Attendance Dashboard
+===============================
+This Module Helps you to View Leaves of Employee Based on Different Leave Types.
 
 Configuration
 =============
-* Install python library pandas : - "sudo pip3 install pandas" on terminal.
+* No additional configurations needed
 
 Company
-=======
+-------
 * `Cybrosys Techno Solutions <https://cybrosys.com/>`__
 
 License
-=======
-General Public License, Version 3 (LGPL v3).
-(http://www.gnu.org/licenses/lgpl-3.0-standalone.html)
+-------
+Affero General Public License, Version 3 (AGPL v3).
+(https://www.gnu.org/licenses/agpl-3.0-standalone.html)
 
 Credits
-=======
-* Developers:   (V18) Raneesha  MK
-                (V17) Vishnuraj P
-                (V16) Aswani PC
-                (V14) Naveen V
-* Contact: odoo@cybrosys.com
+-------
+* Developers: (V16): Rahul Rajeev ,Jumana Jabin MP ,
+              (V17): Ranjith R,
+              (V18):Gayathri V,
+  Contact: odoo@cybrosys.com
 
 Contacts
-========
+--------
 * Mail Contact : odoo@cybrosys.com
+* Website : https://cybrosys.com
 
 Bug Tracker
-===========
+-----------
 Bugs are tracked on GitHub Issues. In case of trouble, please check there if your issue has already been reported.
 
 Maintainer
@@ -41,7 +41,8 @@ Maintainer
    :target: https://cybrosys.com
 
 This module is maintained by Cybrosys Technologies.
-For support and more information, please visit https://www.openhrms.com or https://www.cybrosys.com
+
+For support and more information, please visit `Our Website <https://cybrosys.com/>`__
 
 Further information
 ===================

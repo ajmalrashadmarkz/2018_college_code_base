@@ -1,0 +1,42 @@
+.attendance_table {
+    float: left;
+    margin: 22px 10px;
+}
+
+.attendance th, thead, tr, tbody, tfoot {
+    padding: 1em;
+    border: 1px solid #ccc;
+}
+
+.table-data {
+    background: #ffffff;
+    border-width: 0px 1px 0px 1px !important;
+    border-color: #bfb7b7;
+    border-style: solid;
+}
+
+.weekend-column {
+    background-color: #f0f0f0;
+    font-style: italic;
+}
+
+.employee-leave-data.weekend-cell {
+    background-color: #E8E8E8 !important;
+}
+
+.leave-data.weekend-text {
+    font-style: italic;
+}
+
+/* Add some responsive styling */
+@media (max-width: 992px) {
+    .attendance_table {
+        margin: 10px 0;
+        width: 100%;
+        overflow-x: auto;
+    }
+    
+    #attendance_table_nm {
+        min-width: 900px;
+    }
+}
